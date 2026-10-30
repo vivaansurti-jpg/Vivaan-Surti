@@ -1,0 +1,18 @@
+
+@font-face{font-family:Gelasio;src:url('./assets/gelasio-400.woff2') format('woff2');font-weight:400;font-display:swap}@font-face{font-family:Gelasio;src:url('./assets/gelasio-500.woff2') format('woff2');font-weight:500;font-display:swap}
+*{box-sizing:border-box} :root{--dot:lab(98.26% 0 0);--name-highlight:rgb(255 255 255 / 11%);--background:lab(2.75381% 0 0);--foreground:lab(98.26% 0 0);--secondary-foreground:lab(98.26% 0 0);--muted-foreground:lab(66.128% -.0000298023 .0000119209);color-scheme:dark}
+:root[data-theme="light"]{--background:lab(100% 0 0);--foreground:lab(2.75381% 0 0);--secondary-foreground:lab(7.78201% -.0000149012 0);--muted-foreground:lab(48.496% 0 0);--grid-opacity:.2;--dot:lab(2.75381% 0 0);--name-highlight:rgb(0 0 0 / 5%);color-scheme:light}
+body{margin:0;background:var(--background);color:var(--foreground);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;isolation:isolate}
+.background{position:fixed;inset:0;pointer-events:none;z-index:-1}.glow{opacity:.5;background:radial-gradient(600px circle at var(--x,0px) var(--y,0px),rgba(71,168,255,.15),transparent 40%)}
+.grid svg{width:100%;height:100%;opacity:.2}main{max-width:672px;margin:auto;padding:80px 24px 96px}.settings{display:flex;justify-content:flex-end;min-height:32px}button{background:none;border:0;color:var(--muted-foreground);padding:4px 8px;cursor:pointer;border-radius:6px}button:hover{color:var(--foreground)}button:focus-visible{outline:2px solid #47a8ff;outline-offset:4px}button svg{width:16px;height:16px;display:block}h1{font-family:Gelasio,Georgia,serif;font-size:60px;font-weight:500;line-height:1;letter-spacing:-1.5px;margin:32px 0 16px}p{font-size:16px;line-height:1.7;color:var(--muted-foreground)}.work{margin-top:72px}h2{font-size:24px;font-weight:500} .placeholder{height:260px;border-top:1px solid color-mix(in srgb,var(--foreground) 12%,transparent);padding-top:20px;color:var(--muted-foreground);font-size:14px}
+
+
+.light-overlay{background:rgb(0 0 0 / 8%);display:none}
+.particles{overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:float-dot var(--duration) ease-in-out var(--delay) infinite backwards;pointer-events:none}
+
+/* Breathing dots: 8s, rise 100px and return, fade 0-1-0, scale .5-1-.5. */
+@keyframes float-dot{0%,100%{transform:translateY(0) scale(.5);opacity:0}50%{transform:translateY(-100px) scale(1);opacity:1}}
+.surname{background:var(--name-highlight);padding:0 4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+@media(prefers-reduced-motion:reduce){.particle{animation:none;opacity:.22;transform:translateY(-50px) scale(.75)}}
+:root[data-theme="light"] .light-overlay{display:block}

@@ -1,0 +1,39 @@
+/* Link emphasis and 300ms preview image zoom. */
+.motion-reveal-pending{opacity:0}
+/* Intro starts hidden from first paint (set in <head>), so it never flashes before animating. */
+.motion-intro :is(.intro,.site-nav a,.site-nav button){opacity:0}
+/* Theme switch: one 0.4s crossfade of the whole page; nothing fades separately underneath it. */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.4s;animation-timing-function:ease}
+.theme-switching *,.theme-switching *::before,.theme-switching *::after{transition:none!important}
+body,.site-nav,.work-letter,.work-caption,.work-card-surface,.eyebrow,.intro p,.outro p,.intro-link,.outro a,#theme{transition:color .65s ease,background-color .65s ease,border-color .65s ease,outline-color .65s ease}
+body{transition:color .65s ease}
+.intro h1,.outro h2,.brand{color:var(--foreground)}
+.grid path{transition:stroke .65s ease}
+.grid svg{opacity:var(--grid-opacity,.2);transition:opacity .65s ease}
+.background.light-overlay{display:block;opacity:0;transition:opacity .65s ease}
+:root[data-theme=light] .background.light-overlay{opacity:1}
+
+.nav-links a,.brand,.intro-link,.outro a{display:inline-block;transition:color .15s cubic-bezier(.4,0,.2,1);transform-origin:center}
+.intro-link,.outro a{color:var(--muted-foreground)}
+.intro-link:hover,.outro a:hover,.intro-link:focus-visible,.outro a:focus-visible{color:var(--foreground)}
+.work-card.is-visible{pointer-events:auto}
+.work-card{padding:0;background:transparent;outline:none}
+.work-card-surface{padding:8px 8px 0;background:#080808;outline:1px solid rgb(255 255 255 / 16%)}
+.work-image-window{overflow:hidden;background:#000}
+.work-image{transition:transform .3s cubic-bezier(.4,0,.2,1);transform-origin:center}
+@media(hover:hover) and (pointer:fine){.work-card-surface:hover .work-image{transform:scale(1.05)}}
+:root[data-theme=light] .work-card{outline:none}
+:root[data-theme=light] .work-card-surface{outline-color:rgb(0 0 0 / 32%)}
+@media(max-width:767px){
+ .work-card-surface{padding:6px 6px 0}
+ .work-card{padding:0}
+ .work-caption{display:flex;gap:12px;padding:8px 2px;font-size:9px;letter-spacing:.1em}
+}
+.work-card-surface.motion-pressed .work-image{transform:scale(1.05)}
+@media(prefers-reduced-motion:reduce){.work-image,.nav-links a,.brand,.intro-link,.outro a{transition:none}.work-image{transform:none!important}}
+
+@media(prefers-reduced-motion:reduce){body,.site-nav,.work-letter,.work-caption,.work-card-surface,.eyebrow,.intro p,.outro p,.intro-link,.outro a,#theme,.grid path,.background.light-overlay{transition:none}}
+/* Performance: a lighter
+   mode for weaker devices (glow kept; no dot lighting, fewer dots, no letter shadows). */
+.lite .particle::after,.lite .work-letter::before{display:none}
+.lite .particle:nth-child(n+21){display:none}

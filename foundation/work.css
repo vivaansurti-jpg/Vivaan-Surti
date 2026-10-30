@@ -1,0 +1,50 @@
+@font-face{font-family:Anton;src:url('./assets/anton-work.woff2') format('woff2'),url('./assets/anton.ttf') format('truetype');font-display:swap}
+html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padding:0}a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid #47a8ff;outline-offset:6px}
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:50;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid color-mix(in srgb,var(--foreground) 10%,transparent);background:color-mix(in srgb,var(--background) 80%,transparent);backdrop-filter:blur(16px)}
+.brand{font-size:13px;letter-spacing:.08em}.nav-links{display:flex;align-items:center;gap:28px;font-size:12px;color:var(--muted-foreground)}.nav-links a:hover,.nav-links a[aria-current]{color:var(--foreground)}#theme{min-width:32px;min-height:36px;display:grid;place-items:center}.intro{max-width:672px;margin:auto;min-height:100svh;padding:180px 24px 80px;display:flex;flex-direction:column;justify-content:center}.intro h1{margin:0 0 20px}.eyebrow{font:10px ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:28px}.intro p{max-width:400px}.intro-link{margin-top:48px;width:fit-content;font-size:12px;border-bottom:1px solid var(--muted-foreground);padding-bottom:8px}.intro-link span{margin-left:48px}
+:root{--work-void:#030609;--work-ink:var(--foreground);--work-shadow:#32424f;--work-shell:var(--background);--work-outline:color-mix(in srgb,var(--foreground) 26%,transparent)}
+:root[data-theme=light]{--work-void:#dfe4e8;--work-shadow:#b3c1cb;--work-shell:#ebebeb}
+.work-section{position:relative;height:700svh;isolation:isolate;scroll-margin-top:0}
+.work-stage{position:sticky;top:0;height:100svh;width:100%;overflow:hidden;background:color-mix(in srgb,var(--work-void) 85%,transparent)}
+.work-point-field{position:absolute;inset:0;opacity:.2;background-image:radial-gradient(var(--work-ink) .6px,transparent .8px);background-size:24px 24px;pointer-events:none}
+.work-scene{position:absolute;inset:0;perspective:640px;transform-style:flat;pointer-events:none}
+.work-letter{position:absolute;top:50%;left:50%;font:400 min(17.5svh,190px)/.85 Anton,Impact,'Arial Narrow',sans-serif;color:var(--work-ink);transform-origin:center;will-change:transform;white-space:nowrap;user-select:none}
+.work-letter::before{content:attr(data-letter);position:absolute;inset:0;color:var(--work-shadow);z-index:-1;transform:translate(3px,3px) scale(1.025);opacity:var(--spread,0)}
+.work-card{position:absolute;top:50%;left:50%;z-index:2;width:max-content;padding:8px 8px 0;background:#080808;color:var(--work-ink);outline:1px solid rgb(255 255 255 / 16%);transform-style:preserve-3d;visibility:hidden;pointer-events:none}
+.work-card.is-visible{visibility:visible}
+.work-image{display:block;width:auto;height:auto;max-width:50vw;max-height:50svh;border:1px solid #000;background:#000;object-fit:contain}
+.work-caption{display:flex;justify-content:space-between;gap:16px;padding:8px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+.work-caption span:last-child{opacity:.65}
+:root[data-theme=light] .work-card{color:#ededed;outline-color:rgb(0 0 0 / 32%)}
+
+.work-mask{position:absolute;inset:0;z-index:10;pointer-events:none;width:100%;height:100%;overflow:visible}.mask-shell{fill:var(--work-shell);fill-rule:evenodd}.mask-grid{fill:url(#work-grid);fill-rule:evenodd}.mask-line{fill:none;stroke:var(--work-outline);stroke-width:1}.mask-grid-line{fill:none;stroke:var(--work-outline);stroke-width:.65}
+.work-meta{position:absolute;bottom:24px;left:32px;right:32px;z-index:15;display:flex;justify-content:space-between;color:var(--muted-foreground);font:9px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}.work-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+/* Dots sit behind the content; the flashlight stays above it so it glows over text, letters and cards. */
+.background.particles{z-index:-1}.background.glow{z-index:20}.background.light-overlay{z-index:-2}
+.outro{min-height:65svh;max-width:672px;margin:auto;padding:120px 24px}.outro h2{font:40px Gelasio,Georgia,serif}.outro a{display:inline-block;font-size:12px;margin-top:24px;border-bottom:1px solid;padding-bottom:8px}
+@media(max-width:767px){.site-nav{padding:0 20px}.nav-links{gap:20px}.intro{padding-top:130px}.intro h1{font-size:48px}.work-meta{left:20px;right:20px;font-size:8px}.work-letter{font-size:17.5svh}}
+@media(prefers-reduced-motion:reduce){.work-section{height:auto;min-height:100svh}.work-stage{position:relative;height:auto;min-height:100svh;padding:110px 24px 80px}.work-mask,.work-scene>.work-letter,.work-point-field{display:none}.work-scene{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;perspective:none}.work-card{position:relative;top:auto;left:auto;width:100%;visibility:visible!important;transform:none!important}.work-label{position:static;width:auto;height:auto;clip-path:none;font:48px Anton,sans-serif;margin:0 0 32px}.work-meta{bottom:24px}}
+/* Keep moving surfaces bounded and promote only the active gallery. */
+.site-nav{background:var(--work-shell);backdrop-filter:none}
+.work-point-field{left:-24px;right:-24px}
+.work-letter,.work-card{will-change:auto}
+.is-active .work-letter,.is-active .work-card.is-visible{will-change:transform}
+.background.glow{inset:auto;top:0;left:0;width:480px;height:480px;background:radial-gradient(600px circle at center,rgba(71,168,255,.15),transparent 40%);transform:translate3d(-240px,-240px,0)}
+.ambient-paused .particle{animation-play-state:paused}
+/* Work uses the same underlying 40px grid as Home. Only the letters/cards
+   are clipped by the capsule; the background stays continuous. */
+.work-stage{background:transparent}
+.mask-shell,.mask-grid,.work-point-field{display:none}
+.work-image{height:auto;object-fit:contain}
+@media(prefers-reduced-motion:reduce){.work-card{opacity:1!important}}
+.particle{background:color-mix(in srgb,var(--dot) 60%,transparent)}
+.particle::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--dot);opacity:calc(var(--light,0)*.5);transition:opacity .25s}
+
+@media(max-width:576px),(max-width:767px) and (orientation:landscape){.work-card{padding:4px}.work-image{max-width:80vw;max-height:80svh}.work-caption{display:none}}
+@media(prefers-reduced-motion:reduce){.work-card{width:100%;opacity:1!important}.work-image{width:100%;max-width:100%;max-height:none}.work-caption{display:flex;font-size:9px;white-space:normal}}
+
+.socials{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:15px;color:var(--muted-foreground)}.socials a{display:inline-block;transition:color .15s cubic-bezier(.4,0,.2,1)}.socials a:hover,.socials a:focus-visible{color:var(--foreground)}
+
+/* Name letter-spacing kept normal, not tightened. */
+.intro h1{letter-spacing:normal}
+.intro-link{font-size:14px}
