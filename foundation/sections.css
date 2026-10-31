@@ -67,3 +67,14 @@ a.post-row[href]{cursor:pointer}
 @media(max-width:1439px){.planet{left:auto;right:calc((100% - 100vw)/2 + 24px);top:122px;font-size:5.6px;line-height:5.6px}}
 @media(max-width:1179px){.planet{top:132px;font-size:4px;line-height:4px;opacity:.85}}
 @media(max-width:767px){.planet{right:auto;left:50%;transform:translateX(-46%);top:4px;font-size:3.2px;line-height:3.2px}}
+/* Two small asteroids (planet.js): one bottom-left of the intro, one on the
+   right below the planet. They drift very slightly; hidden on phones. */
+.asteroid{position:absolute;z-index:-1;margin:0;font:6px/6px ui-monospace,Menlo,monospace;white-space:pre;color:color-mix(in srgb,var(--foreground) 34%,transparent);pointer-events:none;user-select:none;animation:asteroid-drift 16s ease-in-out infinite alternate}
+.asteroid .pl-b{color:color-mix(in srgb,var(--foreground) 80%,rgb(150 195 255))}
+.asteroid .pl-m{color:color-mix(in srgb,var(--foreground) 58%,transparent)}
+.asteroid-1{right:calc(100% + 64px);bottom:64px}
+.asteroid-2{left:calc(100% + 90px);bottom:220px;font-size:5px;line-height:5px;animation-duration:21s;animation-delay:-7s}
+@keyframes asteroid-drift{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(6px,-8px) rotate(4deg)}}
+@media(max-width:1179px){.asteroid-1{right:calc(100% + 24px)}.asteroid-2{left:calc(100% + 30px)}}
+@media(max-width:767px){.asteroid{display:none}}
+@media(prefers-reduced-motion:reduce){.asteroid{animation:none}}

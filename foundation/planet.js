@@ -1,3 +1,5 @@
+// Space decoration beside the intro: a ringed planet and two small asteroids,
+// drawn once on load in text characters.
 // Decorative ASCII ringed planet beside the intro, drawn once on load.
 // Light comes from the upper left; the ring is tilted so it runs low on the
 // left and high on the right, seen from slightly above.
@@ -47,4 +49,45 @@
   flush();return out;}).join('\n');
  const pre=document.createElement('pre');pre.className='planet';pre.setAttribute('aria-hidden','true');pre.innerHTML=html;
  host.prepend(pre);
+})();
+
+// Two small lumpy asteroids in the same text style, lit from the upper left.
+// Hidden on phones (see sections.css); they drift very slightly.
+(() => {
+ const A=.6,ramp=' .:-=+*#';
+ const level=v=>v<.16?1:v<.28?2:v<.42?3:v<.56?4:v<.7?5:v<.84?6:7;
+ const L=(v=>{const n=Math.hypot(...v);return v.map(x=>x/n);})([-.75,-.45,.5]);
+ // Lumpy outline: radius wobbles with angle; a few craters darken the surface.
+ function rock({R,lumps,craters,stretch}){
+  const W=Math.ceil(R*2.6/A),H=Math.ceil(R*2.2),cx=W*A/2,cy=H/2,rows=[];
+  for(let r=0;r<H;r++){let line='';
+   for(let c=0;c<W;c++){
+    const x=(c*A-cx)/stretch,y=r-cy,th=Math.atan2(y,x),dist=Math.hypot(x,y);
+    const edge=R*(1+lumps.reduce((s,[k,a,p])=>s+a*Math.sin(k*th+p),0));
+    if(dist>=edge){line+=' ';continue;}
+    const dx=x/edge,dy=y/edge,nz=Math.sqrt(Math.max(0,1-dx*dx-dy*dy));
+    let v=Math.max(0,dx*L[0]+dy*L[1]+nz*L[2]);
+    for(const [ux,uy,cr] of craters){const d=Math.hypot(dx-ux,dy-uy);if(d<cr)v*=.45;else if(d<cr*1.3)v=Math.min(1,v*1.15);}
+    line+=v<.06?'.':ramp[level(v)];
+   }
+   rows.push(line.replace(/\s+$/,''));
+  }
+  while(rows.length&&!rows[0].trim())rows.shift();
+  while(rows.length&&!rows[rows.length-1].trim())rows.pop();
+  return rows;
+ }
+ const shapes=[
+  rock({R:6.5,stretch:1.25,lumps:[[2,.12,.4],[3,.1,1.7],[5,.06,.2]],craters:[[-.25,-.2,.22],[.3,.25,.18],[-.05,.45,.12]]}),
+  rock({R:4.2,stretch:1.1,lumps:[[2,.14,2.1],[4,.08,.9]],craters:[[.15,-.15,.25]]})
+ ];
+ const host=document.querySelector('.intro');if(!host)return;
+ const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':'';
+ shapes.forEach((rows,i)=>{
+  const html=rows.map(line=>{let out='',cur=null,buf='';
+   const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${buf}</span>`:buf;buf='';};
+   for(const ch of line){const t=ch===' '?null:tone(ch)||null;if(t!==cur){flush();cur=t;}buf+=ch;}
+   flush();return out;}).join('\n');
+  const pre=document.createElement('pre');pre.className='asteroid asteroid-'+(i+1);pre.setAttribute('aria-hidden','true');pre.innerHTML=html;
+  host.append(pre);
+ });
 })();

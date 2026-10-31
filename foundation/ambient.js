@@ -96,7 +96,7 @@ addEventListener('load',()=>setTimeout(watchFrames,2000));
    {opacity:1,offset:.12},
    {opacity:1,offset:.75},
    {transform:at(x1,y1),opacity:0}
-  ],{duration:900+Math.random()*600,easing:'cubic-bezier(.35,0,.65,1)'});
+  ],{duration:2800+Math.random()*1200,easing:'cubic-bezier(.35,0,.65,1)'});   // slow, unhurried crossing
   flight.finished.then(()=>star.remove(),()=>star.remove());
  }
  (function next(){setTimeout(()=>{shoot();next();},7000+Math.random()*11000);})();
