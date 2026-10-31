@@ -48,3 +48,6 @@ html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padd
 /* Name letter-spacing kept normal, not tightened. */
 .intro h1{letter-spacing:normal}
 .intro-link{font-size:14px}
+
+/* Work cards are links to each project's page. */
+a.work-card{display:block;cursor:pointer;text-decoration:none}

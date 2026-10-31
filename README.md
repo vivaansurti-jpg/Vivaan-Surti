@@ -28,3 +28,10 @@ changed; the capsule clip updates only during entrance/exit; the flashlight is
 a bounded translated layer; particle illumination uses cached anchors; hidden
 tabs pause background motion. Work shares Home's original fine grid, dots,
 and flashlight. No separate Work background grid is rendered.
+
+Projects: the Work gallery shows the 8 projects listed in
+`foundation/projects.js`, and each card opens that project's page in
+`projects/<slug>/`. Every page is built from its entry in that list (name,
+tagline, year, type, images, buttons, features, story), so edit the list
+rather than the pages. Put project images in `foundation/assets/` and set
+`image` (and optionally `shots`) to their paths from the site root.

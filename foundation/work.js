@@ -1,5 +1,5 @@
 // Scroll-driven capsule, repeating letter rows, and staggered shallow-3D cards.
-// All geometry is viewport-relative; project artwork can replace the black SVGs.
+// All geometry is viewport-relative. Cards come from window.PROJECTS (projects.js).
 const section=document.querySelector('#work');
 const stage=section.querySelector('.work-stage');
 const scene=section.querySelector('.work-scene');
@@ -16,13 +16,17 @@ const blank='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width=
 for(let row=0;row<4;row++)for(let copy=0;copy<copies;copy++){
  const el=document.createElement('span');el.className='work-letter';el.textContent='WORK'[row];el.dataset.letter='WORK'[row];el.setAttribute('aria-hidden','true');el.style.zIndex=(row===0||row===3)&&copy%3===0?'3':'1';scene.append(el);letters.push({el,row,copy,visible:null});
 }
-for(let i=0;i<12;i++){
- const el=document.createElement('figure');el.className='work-card';el.style.margin='0';
- const img=document.createElement('img');img.className='work-image';img.src=blank;img.alt='Black placeholder for project '+String(i+1).padStart(2,'0');img.width=1082;img.height=636;
- const caption=document.createElement('figcaption');caption.className='work-caption';caption.innerHTML='<span>Project '+String(i+1).padStart(2,'0')+'</span><span>'+String(i+1).padStart(2,'0')+' / 12</span>';
+const projects=window.PROJECTS||[];
+const total=String(projects.length).padStart(2,'0');
+projects.forEach((project,i)=>{
+ const num=String(i+1).padStart(2,'0');
+ // Each card opens that project's own page.
+ const el=document.createElement('a');el.className='work-card';el.href=window.projectHref(project.slug);el.setAttribute('aria-label',project.name+' — open project page');
+ const img=document.createElement('img');img.className='work-image';img.src=project.image?new URL(project.image,window.siteRoot).href:blank;img.alt='';img.width=1082;img.height=636;img.draggable=false;
+ const caption=document.createElement('span');caption.className='work-caption';caption.innerHTML='<span></span><span>'+num+' / '+total+'</span>';caption.firstChild.textContent=project.name;
  const surface=document.createElement('div');surface.className='work-card-surface';
  const imageWindow=document.createElement('div');imageWindow.className='work-image-window';imageWindow.append(img);surface.append(imageWindow,caption);el.append(surface);scene.append(el);cards.push({el,size:.5+((i*37)%50)/100,y:(.55+((i*23)%43)/100)*(i%2?-1:1)});
-}
+});
 let width=innerWidth,height=innerHeight,start=0,range=1,target=0,current=0,frame=0,lastTime=0,active=true;
 function measure(){
  width=stage.clientWidth;height=stage.clientHeight;start=section.getBoundingClientRect().top+scrollY;range=Math.max(1,section.offsetHeight-height);
@@ -33,7 +37,7 @@ function measure(){
 function updateTarget(){target=clamp((scrollY-start)/range);wake();}
 function capsule(cx,cy,w,h){const r=w/2;return `M ${cx-r} ${cy-h/2+r} A ${r} ${r} 0 0 1 ${cx+r} ${cy-h/2+r} L ${cx+r} ${cy+h/2-r} A ${r} ${r} 0 0 1 ${cx-r} ${cy+h/2-r} Z`;}
 function paint(){
- if(reduced.matches){scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent='12 projects';return;}
+ if(reduced.matches){scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent=projects.length+' projects';return;}
  const enter=smooth(current/.10),exit=smooth((current-.90)/.10),spread=enter*(1-exit);
  if(spread!==previousSpread){
  mask.style.visibility=spread===1?'hidden':'visible';
@@ -80,7 +84,7 @@ function paint(){
   const eased=t<.425?linear*(1-(1-t/.425)**4):t>.575?linear+(t-linear)*((t-.575)/.425)**4:linear;
   const p=1-2*eased;
   const visible=Math.abs(p)<1&&spread>.6;
-  if(visible!==card.visible){card.el.classList.toggle('is-visible',visible);card.el.setAttribute('aria-hidden',String(!visible));card.visible=visible;}
+  if(visible!==card.visible){card.el.classList.toggle('is-visible',visible);card.el.setAttribute('aria-hidden',String(!visible));card.el.tabIndex=visible?0:-1;card.visible=visible;}
   if(!visible)return;
   if(Math.abs(p)<.55)visibleIndex=i+1;
   const cardW=card.width,cardH=card.height;
@@ -91,7 +95,7 @@ function paint(){
   // Cards naturally enter and leave through the scene's side edges.
   card.el.style.transform=`rotateY(${-p*20}deg) translate3d(${p*(width*.5+cardW)-cardW/2}px,${y}px,${p*p*-80}px) scale(${size})`;
  });
- const label=visibleIndex?String(visibleIndex).padStart(2,'0')+' / 12':'Selected work';
+ const label=visibleIndex?String(visibleIndex).padStart(2,'0')+' / '+total:'Selected work';
  if(label!==previousCounter){counter.textContent=label;previousCounter=label;}
 
 }
