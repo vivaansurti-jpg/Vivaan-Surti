@@ -39,8 +39,8 @@ main.pj{max-width:none;margin:0;padding:0;overflow-x:clip}
 .pj-float{position:absolute;left:var(--x);top:var(--y);width:var(--w);rotate:var(--tilt);pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;transition:scale .3s cubic-bezier(.34,1.56,.64,1)}
 .pj-float img{pointer-events:none;-webkit-user-drag:none}
 @media(hover:hover) and (pointer:fine){.pj-float:hover{scale:1.04}}
-.pj-float .shot{padding:5px 5px 0}
-.pj-float .shot-cap{gap:6px;padding:6px 1px;font-size:7.5px;letter-spacing:.1em}
+.pj-float .shot{padding:6px 6px 0}
+.pj-float .shot-cap{gap:8px;padding:7px 1px;font-size:8.5px;letter-spacing:.12em}
 .pj-float.is-dragging{cursor:grabbing;scale:1.06}
 
 /* Features */

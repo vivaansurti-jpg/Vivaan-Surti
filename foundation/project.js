@@ -15,15 +15,9 @@
  const shotAt=i=>p.shots.length?p.shots[i%p.shots.length]:p.image;
  // Scattered cards around the title (laptop widths only).
  const SCATTER=[
-  {x:'3%', y:70, w:150,ar:'tall',  tilt:-3},
-  {x:'15%',y:28, w:210,ar:'wide',  tilt:2},
-  {x:'4%', y:330,w:220,ar:'wide',  tilt:1.5},
-  {x:'17%',y:250,w:120,ar:'square',tilt:-4},
-  {x:'4%', y:560,w:140,ar:'tall',  tilt:3},
-  {x:'71%',y:40, w:220,ar:'wide',  tilt:-2},
-  {x:'88%',y:120,w:140,ar:'tall',  tilt:3},
-  {x:'78%',y:300,w:130,ar:'square',tilt:4},
-  {x:'86%',y:470,w:160,ar:'tall',  tilt:-2.5},
+  {x:'5%', y:80, w:250,ar:'wide',  tilt:-3},
+  {x:'79%',y:56, w:190,ar:'tall',  tilt:3},
+  {x:'4%', y:400,w:170,ar:'square',tilt:2.5},
  ];
  const home=window.siteHref('');
  const prev=list[(index-1+list.length)%list.length],next=list[(index+1)%list.length];
