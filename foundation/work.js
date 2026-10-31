@@ -110,14 +110,10 @@ function moving(on){clearTimeout(movingTimer);if(on)document.documentElement.cla
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastTime=0;updateTarget()}});
 addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure);reduced.addEventListener('change',()=>{current=target;measure()});
 new IntersectionObserver(entries=>{active=entries[0].isIntersecting;stage.classList.toggle('is-active',active);if(active){updateTarget();wake();}},{rootMargin:'100px'}).observe(section);
-const navLinks=document.querySelectorAll('.nav-links a');
-const sectionObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)navLinks.forEach(link=>{if(link.hash==='#'+entry.target.id)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current')})})},{rootMargin:'-30% 0px -50% 0px'});
-sectionObserver.observe(section);sectionObserver.observe(document.querySelector('#home'));
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{
  const dest=document.querySelector(link.hash);if(!dest)return;event.preventDefault();history.pushState(null,'',link.hash);
  const top=dest.getBoundingClientRect().top+scrollY;
  // Landing exactly at the section start presents the closed capsule first.
  window.scrollTo({top,behavior:'instant'});current=target=dest===section?0:clamp((top-start)/range);paint();
- navLinks.forEach(a=>{if(a.hash===link.hash)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')});
 }));
 measure();current=target;paint();document.fonts.ready.then(measure);

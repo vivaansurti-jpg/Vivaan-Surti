@@ -3,7 +3,7 @@
 Open `index.html` directly, or serve this folder with a local static server.
 The existing `foundation/index.html` entry also displays the same site.
 
-Home and Work are sections of one document. The navbar's Work link lands on
+Home and Work are sections of one document. The Explore the work link lands on
 the closed capsule; scroll to open the gallery and browse 12 black placeholders.
 Scrolling backward reverses the sequence. Light/dark mode is saved locally.
 
