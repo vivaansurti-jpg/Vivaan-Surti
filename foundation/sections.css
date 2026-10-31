@@ -7,7 +7,7 @@
 .intro-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
 .avatar{margin:0;width:64px;height:64px;border-radius:10px;overflow:hidden;display:grid;place-items:center;background:color-mix(in srgb,var(--foreground) 10%,transparent);box-shadow:0 10px 15px -3px rgb(0 0 0 / 12%),0 4px 6px -4px rgb(0 0 0 / 12%);font:500 20px Gelasio,Georgia,serif;color:var(--muted-foreground);transition:transform .2s ease}
 .avatar{width:96px;height:96px;color:var(--foreground)}
-.avatar pre{grid-area:1/1;margin:0;width:100%;height:100%;position:relative;font:4px/4.8px monospace;letter-spacing:0;white-space:pre;text-align:left;color:var(--foreground)}
+.avatar pre{grid-area:1/1;margin:0;width:100%;height:100%;position:relative;font:3.333333px/4px monospace;letter-spacing:0;white-space:pre;text-align:left;color:var(--foreground)}
 .avatar .ascii-light{display:none}
 :root[data-theme=light] .avatar .ascii-dark{display:none}
 :root[data-theme=light] .avatar .ascii-light{display:block}
@@ -70,7 +70,7 @@ a.post-row[href]{cursor:pointer}
    of the theme toggle; on phones it sits between the avatar and the toggle. */
 @media(max-width:1439px){.planet{left:auto;right:calc((100% - 100vw)/2 + 24px);top:122px;font-size:5.6px;line-height:5.6px}}
 @media(max-width:1179px){.planet{top:132px;font-size:4px;line-height:4px;opacity:.85}}
-@media(max-width:767px){.planet{right:auto;left:50%;transform:translateX(-46%);top:4px;font-size:3.2px;line-height:3.2px}}
+@media(max-width:767px){.planet{display:none}}
 /* A small asteroid (planet.js) bottom-left of the intro. It drifts very
    slightly; hidden on phones. */
 .asteroid{position:absolute;z-index:-1;margin:0;font:6px/6px ui-monospace,Menlo,monospace;white-space:pre;color:color-mix(in srgb,var(--foreground) 34%,transparent);pointer-events:none;user-select:none;animation:asteroid-drift 16s ease-in-out infinite alternate}
@@ -90,7 +90,7 @@ a.post-row[href]{cursor:pointer}
 .work-deco .pl-m{color:color-mix(in srgb,var(--foreground) 62%,transparent)}
 .work-deco .pl-f{color:color-mix(in srgb,var(--foreground) 12%,transparent)}
 .work-moon{left:9vw;top:27svh}
-.work-satellite{right:8vw;bottom:18svh;transform:rotate(-14deg)}
+.work-satellite{right:8vw;bottom:18svh;transform:rotate(-12deg)}
 @media(max-width:1439px){.work-deco{font-size:5.6px;line-height:5.6px}}
 @media(max-width:1179px){.work-deco{font-size:4.5px;line-height:4.5px}.work-moon{left:5vw}.work-satellite{right:4vw}}
 @media(max-width:767px){.work-deco{display:none}}
@@ -102,6 +102,13 @@ a.post-row[href]{cursor:pointer}
 :root[data-theme=light] :is(.planet,.asteroid,.work-deco) .pl-m{color:color-mix(in srgb,var(--foreground) 92%,transparent)}
 :root[data-theme=light] :is(.planet,.work-deco) .pl-f{color:color-mix(in srgb,var(--foreground) 34%,transparent)}
 :root[data-theme=light] .planet{opacity:1}
+/* Shadowed edges get a soft outline (pl-r) and the faintest tones are lifted,
+   so every object keeps its full shape against the background in both themes. */
+:is(.planet,.asteroid,.work-deco){color:color-mix(in srgb,var(--foreground) 44%,transparent)}
+:is(.planet,.asteroid,.work-deco) .pl-f{color:color-mix(in srgb,var(--foreground) 20%,transparent)}
+:is(.planet,.asteroid,.work-deco) .pl-r{color:color-mix(in srgb,var(--foreground) 46%,transparent)}
+:root[data-theme=light] :is(.planet,.asteroid,.work-deco) .pl-f{color:color-mix(in srgb,var(--foreground) 48%,transparent)}
+:root[data-theme=light] :is(.planet,.asteroid,.work-deco) .pl-r{color:color-mix(in srgb,var(--foreground) 72%,transparent)}
 
-.avatar pre span{position:absolute;width:2.5%;height:5%;text-align:center}
-@media(max-width:767px){.avatar{width:72px;height:72px}.avatar pre{font-size:3px;line-height:3.6px}}
+.avatar pre span{position:absolute;width:2.083333%;height:4.166667%;text-align:center}
+@media(max-width:767px){.avatar{width:72px;height:72px}.avatar pre{font-size:2.5px;line-height:3px}}

@@ -10,8 +10,8 @@
   rows.forEach((row,y)=>Array.from(row).forEach((char,x)=>{
    const span=document.createElement('span');
    span.textContent=char;
-   span.style.left=`${x*2.5}%`;
-   span.style.top=`${y*5}%`;
+   span.style.left=`${x*100/48}%`;
+   span.style.top=`${y*100/24}%`;
    pre.appendChild(span);
    particles.push({el:span,x,y,dx:0,dy:0,vx:0,vy:0});
   }));
@@ -25,10 +25,10 @@
   particles.forEach(p=>{
    let tx=0,ty=0;
    if(pointer&&fine.matches){
-    const dx=box.left+(p.x+.5)*box.width/40-pointer.x;
-    const dy=box.top+(p.y+.5)*box.height/20-pointer.y;
-    const distance=Math.hypot(dx,dy),radius=38;
-    if(distance<radius){const force=(1-distance/radius)*11;tx=dx/(distance||1)*force;ty=dy/(distance||1)*force;}
+    const dx=box.left+(p.x+.5)*box.width/48-pointer.x;
+    const dy=box.top+(p.y+.5)*box.height/24-pointer.y;
+    const distance=Math.hypot(dx,dy),radius=28;
+    if(distance<radius){const force=(1-distance/radius)*4;tx=dx/(distance||1)*force;ty=dy/(distance||1)*force;}
    }
    p.vx+=((tx-p.dx)*150-p.vx*19)*dt;
    p.vy+=((ty-p.dy)*150-p.vy*19)*dt;

@@ -28,12 +28,14 @@
     if(ringInFront){
      v=(e<.74?.62:.4)*(qx<0?1:.72);
      if(qx>0&&Math.abs(qy)<R*.55&&qx<R*1.7)v*=.3;         // planet's shadow on the far side
+     v=Math.max(v,.17);                                    // the far ring stays visible
     }else if(inPlanet){
      const nz=Math.sqrt(1-d);
      v=Math.max(0,dx*L[0]+dy*L[1]+nz*L[2])**.9*(.88+.12*Math.sin(dy*8));
      faint=v<.08;
     }
-    row.push(v<0?' ':faint?'~':ramp[level(v)]);
+    const rim=inPlanet&&!ringInFront&&d>.8&&v<.3;          // soft outline on the shadowed edge
+    row.push(v<0?' ':rim?'^':faint?'~':ramp[level(v)]);
    }
    rows.push(row.join('').replace(/\s+$/,''));
   }
@@ -43,9 +45,9 @@
  }
  const host=document.querySelector('.intro');if(!host)return;
  // Group runs of the same tone into spans: bright, mid, dim, and the faint night side.
- const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':ch==='~'?'f':'';
+ const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':ch==='~'?'f':ch==='^'?'r':'';
  const html=draw().map(line=>{let out='',cur=null,buf='';
-  const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${cur==='f'?buf.replace(/~/g,'.'):buf}</span>`:buf;buf='';};
+  const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${cur==='f'?buf.replace(/~/g,'.'):cur==='r'?buf.replace(/\^/g,':'):buf}</span>`:buf;buf='';};
   for(const ch of line){const t=ch===' '?null:tone(ch)||null;if(t!==cur){flush();cur=t;}buf+=ch;}
   flush();return out;}).join('\n');
  const pre=document.createElement('pre');pre.className='planet';pre.setAttribute('aria-hidden','true');pre.innerHTML=html;
@@ -69,7 +71,7 @@
     const dx=x/edge,dy=y/edge,nz=Math.sqrt(Math.max(0,1-dx*dx-dy*dy));
     let v=Math.max(0,dx*L[0]+dy*L[1]+nz*L[2]);
     for(const [ux,uy,cr] of craters){const d=Math.hypot(dx-ux,dy-uy);if(d<cr)v*=.45;else if(d<cr*1.3)v=Math.min(1,v*1.15);}
-    line+=v<.06?'.':ramp[level(v)];
+    line+=dist>edge*.8&&v<.3?'^':v<.06?'.':ramp[level(v)];   // soft outline on the shadowed edge
    }
    rows.push(line.replace(/\s+$/,''));
   }
@@ -81,10 +83,10 @@
   rock({R:6.5,stretch:1.25,lumps:[[2,.12,.4],[3,.1,1.7],[5,.06,.2]],craters:[[-.25,-.2,.22],[.3,.25,.18],[-.05,.45,.12]]})
  ];
  const host=document.querySelector('.intro');if(!host)return;
- const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':'';
+ const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':ch==='^'?'r':'';
  shapes.forEach((rows,i)=>{
   const html=rows.map(line=>{let out='',cur=null,buf='';
-   const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${buf}</span>`:buf;buf='';};
+   const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${cur==='r'?buf.replace(/\^/g,':'):buf}</span>`:buf;buf='';};
    for(const ch of line){const t=ch===' '?null:tone(ch)||null;if(t!==cur){flush();cur=t;}buf+=ch;}
    flush();return out;}).join('\n');
   const pre=document.createElement('pre');pre.className='asteroid asteroid-'+(i+1);pre.setAttribute('aria-hidden','true');pre.innerHTML=html;
@@ -129,21 +131,22 @@
   for(let r=0;r<H;r++){let line='';
    for(let c=0;c<W;c++){const nx=(c*A-cx)/R,ny=(r-cy)/(R*squash),d=nx*nx+ny*ny;
     if(d>=1){line+=' ';continue;}
-    const v=shade(nx,ny,Math.sqrt(1-d));line+=v<.08?'~':ramp[level(v)];}
+    const v=shade(nx,ny,Math.sqrt(1-d));line+=d>.8&&v<.3?'^':v<.08?'~':ramp[level(v)];}   // outline on the shadowed edge
    rows.push(line.replace(/\s+$/,''));}
   while(rows.length&&!rows[0].trim())rows.shift();
   while(rows.length&&!rows[rows.length-1].trim())rows.pop();
   return rows;
  }
- // A basic satellite: lit body with an antenna and dish, truss arms and two
- // gridded solar panels (the left one catching the light).
- const satellite=["                         .", "                         :", "                       .-=-.", "                      =*###*=", "                       :=*=:", "                         :", " ############           =*#*=           ++++++++++++", " #=#=#=#=#=#=          *#####*          +-+-+-+-+-+-", " ############==========*#####*==========++++++++++++", " #=#=#=#=#=#=          *####**          +-+-+-+-+-+-", " ############          *###***          ++++++++++++", " #=#=#=#=#=#=          =**+++=          +-+-+-+-+-+-", " ############           =+++=           ++++++++++++", "                         :.:", "                        .   ."];
+ // A satellite seen slightly from the left: a box-shaped body lit on its left
+ // side, a shaded dish on a mast, thin arms, and two framed solar panels with a
+ // grid of cells (the left one in the light, the right one turned away).
+ const satellite=["                                .:.", "                             .-=*#*=-.", "                            -*###*+==-:", "                             :-=+++=-:.", "                                 :", "                                 :", " ###########################   :=###*+=:   ===========================", " #*-----*-----*-----*-----*#   +######*+   =+:::::+:::::+:::::+:::::+=", " #*#####*#####*#####*#####*#===*######*+===+=======+=====+=====+=====+=", " #*-----*-----*-----*-----*#   *#####**=   =+:::::+:::::+:::::+:::::+=", " #*#####*#####*#####*#####*#   *####**+=   =+=====+=====+=====+=====+=", " #*-----*-----*-----*-----*#   +***++==-   =+:::::+:::::+:::::+:::::+=", " ###########################   :=+++==:   ===========================", "                                 :.:", "                                .   ."];
  const shapes=[['work-moon',body(14,moon)],['work-satellite',satellite]];
  const stage=document.querySelector('.work-stage'),scene=stage&&stage.querySelector('.work-scene');if(!scene)return;
- const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':ch==='~'?'f':'';
+ const tone=ch=>ch==='#'||ch==='*'?'b':ch==='+'||ch==='='?'m':ch==='~'?'f':ch==='^'?'r':'';
  shapes.forEach(([name,rows])=>{
   const html=rows.map(line=>{let out='',cur=null,buf='';
-   const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${cur==='f'?buf.replace(/~/g,'.'):buf}</span>`:buf;buf='';};
+   const flush=()=>{if(!buf)return;out+=cur?`<span class="pl-${cur}">${cur==='f'?buf.replace(/~/g,'.'):cur==='r'?buf.replace(/\^/g,':'):buf}</span>`:buf;buf='';};
    for(const ch of line){const t=ch===' '?null:tone(ch)||null;if(t!==cur){flush();cur=t;}buf+=ch;}
    flush();return out;}).join('\n');
   const pre=document.createElement('pre');pre.className='work-deco '+name;pre.setAttribute('aria-hidden','true');pre.innerHTML=html;
