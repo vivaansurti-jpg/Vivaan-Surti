@@ -58,3 +58,15 @@ a.post-row[href]{cursor:pointer}
 .intro h1 .caret{display:inline-block;width:3px;height:.85em;margin-left:6px;vertical-align:-.06em;background:currentColor;animation:caret-blink 1s steps(1) infinite}
 .intro h1.is-typing .caret{animation:none}
 @keyframes caret-blink{50%{opacity:0}}
+
+/* Decorative ringed planet beside the intro (drawn by planet.js). */
+.intro{position:relative}
+.planet{position:absolute;left:calc(100% - 64px);top:36px;z-index:-1;margin:0;font:7px/7px ui-monospace,Menlo,monospace;white-space:pre;color:color-mix(in srgb,var(--foreground) 34%,transparent);pointer-events:none;user-select:none}
+.planet .pl-b{color:color-mix(in srgb,var(--foreground) 88%,rgb(150 195 255))}
+.planet .pl-m{color:color-mix(in srgb,var(--foreground) 62%,transparent)}
+.planet .pl-f{color:color-mix(in srgb,var(--foreground) 12%,transparent)}
+/* Smaller screens: shrink, keep it on screen (24px from the edge) and clear
+   of the theme toggle; on phones it sits between the avatar and the toggle. */
+@media(max-width:1439px){.planet{left:auto;right:calc((100% - 100vw)/2 + 24px);top:122px;font-size:5.6px;line-height:5.6px}}
+@media(max-width:1179px){.planet{top:132px;font-size:4px;line-height:4px;opacity:.85}}
+@media(max-width:767px){.planet{right:auto;left:50%;transform:translateX(-46%);top:4px;font-size:3.2px;line-height:3.2px}}
