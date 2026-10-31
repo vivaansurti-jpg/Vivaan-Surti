@@ -54,7 +54,7 @@
  function reveal(el,{y=20,scale=1,duration=600,delay=0,easing=quart}={}){
   if(reduce.matches||!el)return;
   el.classList.remove('motion-reveal-pending');
-  const animation=el.animate([{opacity:0,transform:`translateY(${y}px) scale(${scale})`},{opacity:1,transform:'translateY(0) scale(1)'}],{duration,delay,easing,fill:'backwards'});
+  const animation=el.animate([{opacity:0,transform:`translateY(${y}px) scale(${el.matches('.avatar')?.8:scale}) rotate(${el.matches('.avatar')?-10:0}deg)`},{opacity:1,transform:'translateY(0) scale(1)'}],{duration,delay,easing,fill:'backwards'});
   animations.add(animation);animation.finished.finally(()=>animations.delete(animation)).catch(()=>{});
  }
  // Intro enters as one block while its contents ripple in ~70ms apart inside it,
