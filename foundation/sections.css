@@ -67,14 +67,34 @@ a.post-row[href]{cursor:pointer}
 @media(max-width:1439px){.planet{left:auto;right:calc((100% - 100vw)/2 + 24px);top:122px;font-size:5.6px;line-height:5.6px}}
 @media(max-width:1179px){.planet{top:132px;font-size:4px;line-height:4px;opacity:.85}}
 @media(max-width:767px){.planet{right:auto;left:50%;transform:translateX(-46%);top:4px;font-size:3.2px;line-height:3.2px}}
-/* Two small asteroids (planet.js): one bottom-left of the intro, one on the
-   right below the planet. They drift very slightly; hidden on phones. */
+/* A small asteroid (planet.js) bottom-left of the intro. It drifts very
+   slightly; hidden on phones. */
 .asteroid{position:absolute;z-index:-1;margin:0;font:6px/6px ui-monospace,Menlo,monospace;white-space:pre;color:color-mix(in srgb,var(--foreground) 34%,transparent);pointer-events:none;user-select:none;animation:asteroid-drift 16s ease-in-out infinite alternate}
 .asteroid .pl-b{color:color-mix(in srgb,var(--foreground) 80%,rgb(150 195 255))}
 .asteroid .pl-m{color:color-mix(in srgb,var(--foreground) 58%,transparent)}
-.asteroid-1{right:calc(100% + 64px);bottom:64px}
-.asteroid-2{left:calc(100% + 90px);bottom:220px;font-size:5px;line-height:5px;animation-duration:21s;animation-delay:-7s}
+.asteroid-1{right:calc(100% + 92px);bottom:118px}
 @keyframes asteroid-drift{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(6px,-8px) rotate(4deg)}}
-@media(max-width:1179px){.asteroid-1{right:calc(100% + 24px)}.asteroid-2{left:calc(100% + 30px)}}
+@media(max-width:1179px){.asteroid-1{right:calc(100% + 40px)}}
 @media(max-width:767px){.asteroid{display:none}}
 @media(prefers-reduced-motion:reduce){.asteroid{animation:none}}
+/* A moon and a satellite beside the closed Work capsule (planet.js), in the
+   same characters, sizes and colours as the ringed planet; the capsule covers
+   them as it opens. Hidden on phones and with reduced motion (where the
+   gallery is a plain grid). */
+.work-deco{position:absolute;margin:0;font:7px/7px ui-monospace,Menlo,monospace;white-space:pre;color:color-mix(in srgb,var(--foreground) 34%,transparent);pointer-events:none;user-select:none}
+.work-deco .pl-b{color:color-mix(in srgb,var(--foreground) 88%,rgb(150 195 255))}
+.work-deco .pl-m{color:color-mix(in srgb,var(--foreground) 62%,transparent)}
+.work-deco .pl-f{color:color-mix(in srgb,var(--foreground) 12%,transparent)}
+.work-moon{left:9vw;top:27svh}
+.work-satellite{right:8vw;bottom:18svh;transform:rotate(-14deg)}
+@media(max-width:1439px){.work-deco{font-size:5.6px;line-height:5.6px}}
+@media(max-width:1179px){.work-deco{font-size:4.5px;line-height:4.5px}.work-moon{left:5vw}.work-satellite{right:4vw}}
+@media(max-width:767px){.work-deco{display:none}}
+@media(prefers-reduced-motion:reduce){.work-deco{display:none}}
+/* Light mode: stronger ink for all the text-drawn space objects, so they
+   don't wash out on the pale background (no blue tint, darker tones). */
+:root[data-theme=light] :is(.planet,.asteroid,.work-deco){color:color-mix(in srgb,var(--foreground) 74%,transparent);font-weight:700}
+:root[data-theme=light] :is(.planet,.asteroid,.work-deco) .pl-b{color:var(--foreground)}
+:root[data-theme=light] :is(.planet,.asteroid,.work-deco) .pl-m{color:color-mix(in srgb,var(--foreground) 92%,transparent)}
+:root[data-theme=light] :is(.planet,.work-deco) .pl-f{color:color-mix(in srgb,var(--foreground) 34%,transparent)}
+:root[data-theme=light] .planet{opacity:1}
