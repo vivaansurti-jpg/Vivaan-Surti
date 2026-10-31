@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><meta name="theme-color" content="#0a0a0a"><title>Page not found — Vivaan Surti</title>
+<script>try{var t=localStorage.getItem('portfolio-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+/* Self-contained so it renders correctly at any broken address. */
+@font-face{font-family:Gelasio;src:url('/foundation/assets/gelasio-500.woff2') format('woff2');font-weight:500;font-display:swap}
+*{box-sizing:border-box}
+:root{--background:lab(2.75381% 0 0);--foreground:lab(98.26% 0 0);--muted:lab(66.128% 0 0);--line:rgb(255 255 255 / 5%);--highlight:rgb(255 255 255 / 11%);color-scheme:dark}
+:root[data-theme="light"]{--background:lab(100% 0 0);--foreground:lab(2.75381% 0 0);--muted:lab(48.496% 0 0);--line:rgb(0 0 0 / 5%);--highlight:rgb(0 0 0 / 5%);color-scheme:light}
+html,body{height:100%}
+body{margin:0;display:grid;place-items:center;background:var(--background);color:var(--foreground);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px}
+main{width:100%;max-width:672px;padding:48px 24px}
+.code{font:12px ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+h1{font:500 60px/1 Gelasio,Georgia,serif;margin:0 0 16px}
+h1 span{background:var(--highlight);padding:0 4px}
+p{font-size:18px;line-height:1.625;color:var(--muted);margin:0 0 40px}
+a{color:var(--muted);text-decoration:none;font-size:14px;border-bottom:1px solid var(--muted);padding-bottom:6px;transition:color .15s cubic-bezier(.4,0,.2,1)}
+a:hover,a:focus-visible{color:var(--foreground)}
+a:focus-visible{outline:2px solid #47a8ff;outline-offset:6px}
+@media(max-width:767px){h1{font-size:44px}p{font-size:17px}}
+</style></head>
+<body><main>
+ <p class="code">Error 404</p>
+ <h1>retrieval <span>failure.</span></h1>
+ <p id="why">This page may have been encoded once, but it can’t be recalled now.</p>
+ <a href="/">Back to the homepage →</a>
+</main>
+<script>
+// A different explanation each visit.
+(function(){var lines=['This page may have been encoded once, but it can’t be recalled now.','It’s on the tip of my tongue. Not this page, though.','Probably interference from a newer page.','No retrieval cue is strong enough to bring this page back.','This page decayed before it could be recalled.'];
+document.getElementById('why').textContent=lines[Math.floor(Math.random()*lines.length)];})();
+</script>
+</body></html>

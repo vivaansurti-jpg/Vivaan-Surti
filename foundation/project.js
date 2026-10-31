@@ -11,7 +11,7 @@
  const blank='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1082" height="636"%3E%3Cpath fill="black" d="M0 0h1082v636H0z"/%3E%3C/svg%3E';
  const src=path=>path?new URL(path,window.siteRoot).href:blank;
  const AR={wide:'1082 / 636',tall:'3 / 4',square:'1 / 1'};
- const card=(image,ar='wide')=>`<div class="shot"><div class="shot-window" style="--ar:${AR[ar]}"><img src="${esc(src(image))}" alt="" draggable="false"></div><div class="shot-cap"><span>${esc(p.name)}</span><span>${num} / ${total}</span></div></div>`;
+ const card=(image,ar='wide')=>`<div class="shot"><div class="shot-window" style="--ar:${AR[ar]}"><img src="${esc(src(image))}" alt="" draggable="false" loading="lazy" decoding="async"></div><div class="shot-cap"><span>${esc(p.name)}</span><span>${num} / ${total}</span></div></div>`;
  const shotAt=i=>p.shots.length?p.shots[i%p.shots.length]:p.image;
  // Scattered cards around the title (laptop widths only).
  const SCATTER=[

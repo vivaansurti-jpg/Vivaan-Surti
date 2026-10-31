@@ -37,8 +37,10 @@ html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padd
 .mask-shell,.mask-grid,.work-point-field{display:none}
 .work-image{height:auto;object-fit:contain}
 @media(prefers-reduced-motion:reduce){.work-card{opacity:1!important}}
-.particle{background:color-mix(in srgb,var(--dot) 60%,transparent)}
-.particle::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--dot);opacity:calc(var(--light,0)*.5);transition:opacity .25s}
+/* Dots brighten near the cursor by changing their own colour (same look as
+   the old overlay layer, which forced constant style work; no transition for
+   the same reason, and the 10-per-second updates already read as smooth). */
+.particle{background:color-mix(in srgb,var(--dot) calc(60% + var(--light,0)*20%),transparent)}
 
 @media(max-width:576px),(max-width:767px) and (orientation:landscape){.work-card{padding:4px}.work-image{max-width:80vw;max-height:80svh}.work-caption{display:none}}
 @media(prefers-reduced-motion:reduce){.work-card{width:100%;opacity:1!important}.work-image{width:100%;max-width:100%;max-height:none}.work-caption{display:flex;font-size:9px;white-space:normal}}

@@ -22,7 +22,7 @@ projects.forEach((project,i)=>{
  const num=String(i+1).padStart(2,'0');
  // Each card opens that project's own page.
  const el=document.createElement('a');el.className='work-card';el.href=window.projectHref(project.slug);el.setAttribute('aria-label',project.name+' — open project page');
- const img=document.createElement('img');img.className='work-image';img.src=project.image?new URL(project.image,window.siteRoot).href:blank;img.alt='';img.width=1082;img.height=636;img.draggable=false;
+ const img=document.createElement('img');img.className='work-image';img.src=project.image?new URL(project.image,window.siteRoot).href:blank;img.alt='';img.loading='lazy';img.decoding='async';img.width=1082;img.height=636;img.draggable=false;
  const caption=document.createElement('span');caption.className='work-caption';caption.innerHTML='<span></span><span>'+num+' / '+total+'</span>';caption.firstChild.textContent=project.name;
  const surface=document.createElement('div');surface.className='work-card-surface';
  const imageWindow=document.createElement('div');imageWindow.className='work-image-window';imageWindow.append(img);surface.append(imageWindow,caption);el.append(surface);scene.append(el);cards.push({el,size:.5+((i*37)%50)/100,y:(.55+((i*23)%43)/100)*(i%2?-1:1)});
@@ -101,8 +101,12 @@ function paint(){
  if(label!==previousCounter){counter.textContent=label;previousCounter=label;}
 
 }
-function tick(time){frame=0;if(!active||document.hidden||reduced.matches){lastTime=0;return;}const dt=Math.min(64,time-(lastTime||time));lastTime=time;current+=(target-current)*(1-Math.exp(-dt/180));if(Math.abs(target-current)<.00001)current=target;paint();if(current!==target)frame=requestAnimationFrame(tick);else lastTime=0;}
-function wake(){if(!frame&&active&&!document.hidden&&!reduced.matches)frame=requestAnimationFrame(tick);}
+function tick(time){frame=0;if(!active||document.hidden||reduced.matches){lastTime=0;moving(false);return;}const dt=Math.min(64,time-(lastTime||time));lastTime=time;current+=(target-current)*(1-Math.exp(-dt/180));if(Math.abs(target-current)<.00001)current=target;paint();if(current!==target)frame=requestAnimationFrame(tick);else{lastTime=0;moving(false);}}
+function wake(){if(!frame&&active&&!document.hidden&&!reduced.matches){frame=requestAnimationFrame(tick);moving(true);}}
+// While the gallery is moving, the slow background dots pause (no one notices
+// during a scroll) so weaker machines spend every frame on the gallery itself.
+let movingTimer=0;
+function moving(on){clearTimeout(movingTimer);if(on)document.documentElement.classList.add('work-moving');else movingTimer=setTimeout(()=>document.documentElement.classList.remove('work-moving'),250);}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastTime=0;updateTarget()}});
 addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure);reduced.addEventListener('change',()=>{current=target;measure()});
 new IntersectionObserver(entries=>{active=entries[0].isIntersecting;stage.classList.toggle('is-active',active);if(active){updateTarget();wake();}},{rootMargin:'100px'}).observe(section);

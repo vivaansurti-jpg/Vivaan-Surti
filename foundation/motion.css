@@ -34,5 +34,17 @@ body{transition:color .65s ease}
 @media(prefers-reduced-motion:reduce){body,.site-nav,.work-letter,.work-caption,.work-card-surface,.eyebrow,.intro p,.outro p,.intro-link,.outro a,#theme,.grid path,.background.light-overlay{transition:none}}
 /* Performance: a lighter
    mode for weaker devices (glow kept; no dot lighting, fewer dots, no letter shadows). */
-.lite .particle::after,.lite .work-letter::before{display:none}
+.lite .work-letter::before{display:none}
 .lite .particle:nth-child(n+21){display:none}
+
+/* Easter eggs: lights out, and a quiet note at the bottom of the screen. */
+.lights-out{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .35s ease;background:radial-gradient(circle at var(--lx,50%) var(--ly,50%),transparent 0,transparent 70px,rgb(0 0 0 / .55) 120px,rgb(0 0 0 / .96) 190px)}
+.lights-out.is-on{opacity:1}
+.egg-toast{position:fixed;left:50%;bottom:28px;z-index:95;max-width:calc(100vw - 32px);transform:translate(-50%,8px);opacity:0;pointer-events:none;padding:8px 14px;border-radius:999px;font:12px/1.5 ui-monospace,monospace;letter-spacing:.04em;text-align:center;color:var(--foreground);background:color-mix(in srgb,var(--background) 88%,transparent);border:1px solid color-mix(in srgb,var(--foreground) 14%,transparent);transition:opacity .25s ease,transform .25s ease}
+.egg-toast.is-on{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){.lights-out,.egg-toast{transition:none}}
+
+/* Performance: background dots pause while the Work gallery is moving, and
+   sections below the fold are skipped by the browser until they're near. */
+.work-moving .particle{animation-play-state:paused}
+.section,.site-footer{content-visibility:auto;contain-intrinsic-size:auto 640px}

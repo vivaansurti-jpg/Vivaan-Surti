@@ -63,25 +63,30 @@
  reveal(intro,{y:30,scale:.95,duration:1000,easing:expo});
  intro.querySelectorAll('.avatar,#theme,h1,.tagline,.socials a,.timeline li,.intro-link').forEach((el,i)=>reveal(el,{y:20,scale:.95,duration:600,delay:80+i*70,easing:expo}));
  document.querySelectorAll('.site-nav a,.site-nav button').forEach((el,i)=>reveal(el,{y:30,scale:.95,duration:600,delay:i*70,easing:expo}));
- // Headline types itself out once the intro has settled (~0.6s), 55–80ms per
- // letter with a short pause after the comma. Screen readers get the full
- // line from the hidden copy, and reduced motion shows it already typed.
+ // Headline: types itself out once the intro has settled (~0.6s), 55–80ms per
+ // letter with a short pause after commas. Screen readers get the current
+ // line from the hidden copy, and reduced motion shows every line already typed.
  const typed=document.querySelector('.intro .typed-text');
- if(typed&&!reduce.matches){
+ if(typed){
   const heading=typed.closest('h1'),srCopy=heading.querySelector('.sr-only');
+  const still=reduce.matches;
+  typed.dir='auto';   // right-to-left replies (Arabic, Hebrew, Persian) lay out correctly
+  const pick=list=>list[Math.floor(Math.random()*list.length)];
   // Waits also hold while the tab is hidden, so typing never plays unseen.
   const whenVisible=()=>document.hidden?new Promise(resolve=>document.addEventListener('visibilitychange',function shown(){if(!document.hidden){document.removeEventListener('visibilitychange',shown);resolve();}})):null;
-  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)).then(whenVisible);
-  const letter=c=>{const s=document.createElement('span');s.className='ch';s.textContent=c;s.hidden=true;return s;};
+  const wait=ms=>still?Promise.resolve():new Promise(resolve=>setTimeout(resolve,ms)).then(whenVisible);
+  const letter=c=>{const s=document.createElement('span');s.className='ch';s.textContent=c;s.hidden=!still;return s;};
   const chars=[];
   (function split(node){[...node.childNodes].forEach(n=>{
    if(n.nodeType===3){const frag=document.createDocumentFragment();
     [...n.textContent].forEach(c=>{const s=letter(c);frag.append(s);chars.push(s);});n.replaceWith(frag);}
    else split(n);});})(typed);
-  typed.querySelectorAll('.surname').forEach(g=>g.hidden=true);
-  const caret=document.createElement('span');caret.className='caret';caret.setAttribute('aria-hidden','true');heading.append(caret);
-  // A highlight block shows only once one of its letters is visible.
+  if(!still)typed.querySelectorAll('.surname').forEach(g=>g.hidden=true);
+  const caret=document.createElement('span');caret.className='caret';caret.setAttribute('aria-hidden','true');
+  if(!still)heading.append(caret);
+  // A highlight block shows only while one of its letters is visible.
   const syncGroup=ch=>{const g=ch.closest('.surname');if(g)g.hidden=![...g.querySelectorAll('.ch')].some(c=>!c.hidden);};
+  const shownChars=()=>[...typed.querySelectorAll('.ch')].filter(c=>!c.hidden);
   async function typeOut(list){
    heading.classList.add('is-typing');
    for(const ch of list){ch.hidden=false;syncGroup(ch);await wait(55+Math.random()*25+(ch.textContent===','?260:0));}
@@ -91,61 +96,84 @@
    heading.classList.add('is-typing');
    for(const ch of [...list].reverse()){ch.hidden=true;syncGroup(ch);await wait(28);}
   }
-  // Caret countdown. extendOnly never shortens the time already left, and
-  // the countdown pauses while the tab is hidden.
-  let fadeTimer=0,fadeAt=0,fadeLeft=0,armed=false;
-  function fadeCaretIn(ms,extendOnly){
-   const at=performance.now()+ms;
-   if(extendOnly&&at<=fadeAt)return;
-   fadeAt=at;clearTimeout(fadeTimer);fadeTimer=setTimeout(fadeCaret,ms);
-  }
-  function fadeCaret(){
-   fadeAt=0;armed=false;removeEventListener('keydown',onKey);
-   caret.classList.add('caret-out');setTimeout(()=>caret.remove(),500);
-  }
-  document.addEventListener('visibilitychange',()=>{
-   if(!fadeAt)return;
-   if(document.hidden){clearTimeout(fadeTimer);fadeLeft=Math.max(0,fadeAt-performance.now());}
-   else fadeCaretIn(Math.max(fadeLeft,3000));
-  });
+  // The caret stays and blinks for as long as the page is open.
+  let armed=false;
 
-  // Easter egg: greet back while the caret is still blinking and the line
-  // answers once. A refresh starts over with the original greeting.
-  const greetings=/^(hi+|hey+|heya|hiya|hello+|helo|hallo|howdy|yo+|sup|wassup|whatsup|hola|ola|namaste|salut|bonjour|ciao|aloha)$/;
+  // say(): change the headline to a new line, keeping whatever beginning the
+  // two lines share and retyping only the rest. The caret stays and blinks.
+  // Lines queue up, so one that arrives mid-typing plays right after.
+  let queue=Promise.resolve();
+  function say(line){const run=queue.then(()=>sayNow(line));queue=run.catch(()=>{});return run;}
+  async function sayNow(line){
+   const shown=shownChars(),current=shown.map(c=>c.textContent).join('');
+   let keep=0;while(keep<current.length&&keep<line.length&&current[keep]===line[keep])keep++;
+   const gone=shown.slice(keep);
+   await wait(200);
+   await erase(gone);
+   typed.querySelectorAll('.ch').forEach(c=>{if(c.hidden)c.remove();});
+   typed.querySelectorAll('.surname').forEach(g=>{if(!g.querySelector('.ch'))g.remove();});
+   const added=[...line.slice(keep)].map(letter);typed.append(...added);
+   srCopy.textContent=line;
+   await wait(180);
+   await typeOut(added);
+   return true;
+  }
+  window.siteHeadline={say,inView(){const r=heading.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight;}};
+
+  // Easter egg: greet back while the headline is on screen, as many times as
+  // you like; each greeting gets a different line. Greetings and
+  // replies live in greetings.js; each reply is in the greeting's own
+  // language and picked at random. Matching ignores capitals, accents and
+  // stretched endings, and works for one- or two-word greetings.
+  const fold=s=>s.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[-'’]/g,'').replace(/\s+/g,' ').trim().replace(/(\p{L})\1+$/u,'$1');
+  const greetingTable=new Map();
+  (window.siteGreetings||[]).forEach(([words,lines])=>words.forEach(w=>greetingTable.set(fold(w),lines)));
+  const replyFor=text=>{
+   const words=fold(text).split(' ');
+   for(const n of [words.length,3,2,1]){                  // whole input first, then its last few words
+    const lines=n>0&&n<=words.length&&greetingTable.get(words.slice(-n).join(' '));
+    if(lines){const fresh=lines.filter(l=>l!==srCopy.textContent);return pick(fresh.length?fresh:lines);}   // never repeat the line already showing
+   }
+   return null;
+  };
   let buffer='',pauseTimer=0;
   function onKey(e){
-   if(!armed||e.ctrlKey||e.metaKey||e.altKey||e.target.closest?.('input,textarea,select,[contenteditable]'))return;
+   if(!armed||e.metaKey||(e.ctrlKey&&!e.altKey)||e.target.closest?.('input,textarea,select,[contenteditable]'))return;
+   if(!window.siteHeadline.inView()){buffer='';return;}   // only answer when they can see the headline
    clearTimeout(pauseTimer);
-   if(/^[a-z]$/i.test(e.key)){
-    buffer=(buffer+e.key.toLowerCase()).slice(-12);
-    fadeCaretIn(4000,true);         // keep the caret alive while they type, never cut it short
-    pauseTimer=setTimeout(check,600);
-   }else if(e.key===' '||e.key==='Enter'||e.key==='!'||e.key===','||e.key==='.'){
-    if(check()&&e.key===' ')e.preventDefault();
-   }else if(e.key!=='Shift')buffer='';
+   const k=e.key;
+   if([...k].length===1&&/[\p{L}\p{M}]/u.test(k)){
+    buffer=(buffer+k).slice(-30);
+    pauseTimer=setTimeout(check,700);
+   }else if(k===' '){
+    if(buffer.trim())e.preventDefault();             // mid-greeting: the space is part of it, not a page scroll
+    if(!check(true)){if(buffer&&!buffer.endsWith(' '))buffer+=' ';pauseTimer=setTimeout(check,700);}
+   }else if(k==='Enter'||k==='!'||k===','||k==='.'||k==='?'){
+    check();
+   }else if(k==='-'||k==='\''||k==='’'||k==='Dead'||k==='Shift'||k==='Alt'||k==='AltGraph'||k==='CapsLock'){
+    // part of typing a word (hyphens, apostrophes, accents): keep going
+   }else buffer='';
   }
-  function check(){
-   const hit=armed&&greetings.test(buffer);buffer='';
-   if(hit){armed=false;removeEventListener('keydown',onKey);reply();}
-   return hit;
-  }
-  async function reply(){
-   clearTimeout(fadeTimer);fadeAt=0;   // no countdown while the reply plays
-   await wait(250);
-   await erase(chars);
-   const line='how’s your day going?';
-   typed.textContent='';
-   const replyChars=[...line].map(letter);typed.append(...replyChars);
-   srCopy.textContent=line;
-   await wait(220);
-   await typeOut(replyChars);   // the caret keeps blinking after the reply
+  function check(keepOnMiss){
+   const line=armed&&buffer.trim()?replyFor(buffer):null;
+   if(line||!keepOnMiss)buffer='';
+   if(line){lateCancelled=true;say(line);}   // every greeting gets a reply; the caret keeps blinking
+   return !!line;
   }
 
+  // Easter egg: between midnight and 5am (the visitor's time) the greeting
+  // is replaced by a short late-night line, picked at random.
+  const lateNight=['still up?','can’t sleep?','up late too?','night owl?'];
+  let lateCancelled=false;
   (async()=>{
    await wait(600);
    await typeOut(chars);
-   armed=true;addEventListener('keydown',onKey);
-   fadeCaretIn(8000);
+   if(!still){armed=true;addEventListener('keydown',onKey);}
+   if(new Date().getHours()<5){
+    await wait(1300);
+    if(lateCancelled)return;                  // they already greeted back
+    await say(pick(lateNight));
+   }
   })();
  }
  // The animations above now hold the hidden state, so release the first-paint guard.
