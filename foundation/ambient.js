@@ -71,3 +71,33 @@ function watchFrames(){
  requestAnimationFrame(sample);
 }
 addEventListener('load',()=>setTimeout(watchFrames,2000));
+
+// Now and then (every 7–18s at random) a shooting star crosses the sky from
+// one edge to the other, behind the content. It is one small element moved
+// by the compositor and removed afterwards; it skips hidden tabs and
+// reduced motion.
+(()=>{
+ const reduceStars=matchMedia('(prefers-reduced-motion: reduce)');
+ const sky=document.createElement('div');sky.className='background stars';sky.setAttribute('aria-hidden','true');
+ document.body.prepend(sky);
+ function shoot(){
+  if(document.hidden||reduceStars.matches)return;
+  const w=innerWidth,h=innerHeight,ltr=Math.random()<.5;
+  const slope=(10+Math.random()*16)*Math.PI/180;      // gentle downward angle
+  const len=100+Math.random()*90;                        // tail length
+  const x0=ltr?-20:w+20,y0=Math.random()*h*.45;
+  const run=w+40+len,x1=x0+(ltr?run:-run),y1=y0+run*Math.tan(slope);
+  const angle=(ltr?slope:Math.PI-slope)*180/Math.PI;
+  const star=document.createElement('span');star.className='shooting-star';star.style.width=len+'px';
+  sky.append(star);
+  const at=(x,y)=>`translate(${(x-len).toFixed(1)}px,${y.toFixed(1)}px) rotate(${angle.toFixed(1)}deg)`;
+  const flight=star.animate([
+   {transform:at(x0,y0),opacity:0},
+   {opacity:1,offset:.12},
+   {opacity:1,offset:.75},
+   {transform:at(x1,y1),opacity:0}
+  ],{duration:900+Math.random()*600,easing:'cubic-bezier(.35,0,.65,1)'});
+  flight.finished.then(()=>star.remove(),()=>star.remove());
+ }
+ (function next(){setTimeout(()=>{shoot();next();},7000+Math.random()*11000);})();
+})();

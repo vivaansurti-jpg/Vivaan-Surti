@@ -30,9 +30,6 @@ a.post-row[href]{cursor:pointer}
 .post-title{font-size:16px;line-height:1.4}
 .post-sub{display:block;margin-top:4px;font-size:14px;line-height:1.5;color:var(--muted-foreground)}
 .post-meta{flex:none;font-size:13px;color:var(--muted-foreground);white-space:nowrap}
-.beyond-list{display:grid;gap:36px}
-.beyond-item h3{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin:0 0 8px;font-size:17px;font-weight:500;color:var(--foreground)}
-.beyond-item p{margin:0;font-size:15px;line-height:1.7}
 
 /* Footer */
 .site-footer{max-width:672px;margin:auto;padding:128px 24px 48px}
