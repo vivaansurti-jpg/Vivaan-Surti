@@ -38,8 +38,11 @@ body{transition:color .65s ease}
 .lite .particle:nth-child(n+21){display:none}
 
 /* Easter eggs: lights out, and a quiet note at the bottom of the screen. */
-.lights-out{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .35s ease;background:radial-gradient(circle at var(--lx,50%) var(--ly,50%),transparent 0,transparent 70px,rgb(0 0 0 / .55) 120px,rgb(0 0 0 / .96) 190px)}
+.lights-out{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .35s ease;--beam:radial-gradient(circle at var(--lx,50%) var(--ly,50%),rgb(255 222 170 / .07) 0,rgb(255 222 170 / .03) 60px,transparent 120px),radial-gradient(circle at var(--lx,50%) var(--ly,50%),rgb(0 0 0 / .12) 0,rgb(0 0 0 / .2) 45px,rgb(0 0 0 / .42) 95px,rgb(0 0 0 / .7) 140px,rgb(0 0 0 / .86) 190px,rgb(0 0 0 / .92) 260px);background:var(--beam)}
 .lights-out.is-on{opacity:1}
+.lights-out.no-fade{transition:none}
+/* Covers the first paint on a new page until the torch layer takes over. */
+.lights-out-pending body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgb(0 0 0 / .2) 0,rgb(0 0 0 / .7) 140px,rgb(0 0 0 / .92) 260px)}
 .egg-toast{position:fixed;left:50%;bottom:28px;z-index:95;max-width:calc(100vw - 32px);transform:translate(-50%,8px);opacity:0;pointer-events:none;padding:8px 14px;border-radius:999px;font:12px/1.5 ui-monospace,monospace;letter-spacing:.04em;text-align:center;color:var(--foreground);background:color-mix(in srgb,var(--background) 88%,transparent);border:1px solid color-mix(in srgb,var(--foreground) 14%,transparent);transition:opacity .25s ease,transform .25s ease}
 .egg-toast.is-on{opacity:1;transform:translate(-50%,0)}
 @media(prefers-reduced-motion:reduce){.lights-out,.egg-toast{transition:none}}
