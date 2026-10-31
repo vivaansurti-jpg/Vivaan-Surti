@@ -4,11 +4,11 @@ const root=document.documentElement,button=document.querySelector('#theme');
 // Lighter mode for low-core / low-memory / data-saver devices.
 if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4||navigator.connection?.saveData)root.classList.add('lite');
 const particles=document.querySelector('.particles');
-const particleCount=innerWidth<768?28:50;
+const particleCount=root.classList.contains('lite')?20:innerWidth<768?28:50;
 for(let i=0;i<particleCount;i++){
  const dot=document.createElement('span');dot.className='particle';
  const size=2+i%4;
- dot.style.cssText=`width:${size}px;height:${size}px;left:${(i*7.5)%100}%;top:${(i*13.7)%100}%;--duration:8s;--delay:${((i*.1)%5).toFixed(1)}s`;
+ dot.style.cssText=`width:${size}px;height:${size}px;left:${(i*7.5)%100}%;top:${(i*13.7)%100}%;--duration:8s;--delay:-${(1+(i*.73)%7).toFixed(2)}s`;
  particles.append(dot);
 }
 const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2M20 12h2m-13.66 5.66-1.41 1.41m14.14-14.14-1.41 1.41"/>';
@@ -26,7 +26,7 @@ button.addEventListener('click',()=>{
 });
 const glow=document.querySelector('.glow');
 const dotNodes=Array.from(particles.children);
-const dotAnchors=dotNodes.map((el,i)=>({el,x:0,y:0,light:0,duration:8000,delay:((i*.1)%5)*1000}));
+const dotAnchors=dotNodes.map((el,i)=>({el,x:0,y:0,light:0,duration:8000,delay:-(1+(i*.73)%7)*1000}));
 function measureDots(){dotAnchors.forEach((dot,i)=>{dot.x=((i*7.5)%100)/100*innerWidth;dot.y=((i*13.7)%100)/100*innerHeight;});}
 measureDots();addEventListener('resize',measureDots,{passive:true});
 let pending=false,x=0,y=0,pointerActive=false,lightTimer=0;
@@ -81,7 +81,7 @@ addEventListener('load',()=>setTimeout(watchFrames,2000));
  const sky=document.createElement('div');sky.className='background stars';sky.setAttribute('aria-hidden','true');
  document.body.prepend(sky);
  function shoot(){
-  if(document.hidden||reduceStars.matches)return;
+  if(document.hidden||reduceStars.matches||root.classList.contains('lite'))return;
   const w=innerWidth,h=innerHeight,ltr=Math.random()<.5;
   const slope=(10+Math.random()*16)*Math.PI/180;      // gentle downward angle
   const len=100+Math.random()*90;                        // tail length

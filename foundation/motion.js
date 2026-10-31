@@ -62,7 +62,6 @@
  const intro=document.querySelector('.intro');
  reveal(intro,{y:30,scale:.95,duration:1000,easing:expo});
  intro.querySelectorAll('.avatar,#theme,h1,.tagline,.socials a,.timeline li,.intro-link').forEach((el,i)=>reveal(el,{y:20,scale:.95,duration:600,delay:80+i*70,easing:expo}));
- document.querySelectorAll('.site-nav a,.site-nav button').forEach((el,i)=>reveal(el,{y:30,scale:.95,duration:600,delay:i*70,easing:expo}));
  // Headline: types itself out once the intro has settled (~0.6s), 55–80ms per
  // letter with a short pause after commas. Screen readers get the current
  // line from the hidden copy, and reduced motion shows every line already typed.
@@ -187,6 +186,14 @@
  });
  const grid=document.querySelector('.grid svg');
  if(!reduce.matches){const fade=grid.animate([{opacity:0},{opacity:getComputedStyle(grid).opacity}],{duration:2000});animations.add(fade);fade.finished.finally(()=>animations.delete(fade)).catch(()=>{});}
+ // Decorations enter with the same easing as the intro, preserving their placement.
+ const decorationObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(!entry.isIntersecting)return;
+  const el=entry.target;
+  if(!reduce.matches)el.animate([{opacity:0,translate:'0 20px',scale:'.95'},{opacity:1,translate:'0 0',scale:'1'}],{duration:1000,easing:expo,fill:'backwards'});
+  decorationObserver.unobserve(el);
+ }),{threshold:.15});
+ document.querySelectorAll('.planet,.asteroid,.work-deco').forEach(el=>decorationObserver.observe(el));
  // One-time reveals, leaving the scroll-driven Work scene under its own clock.
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
   if(!entry.isIntersecting)return;

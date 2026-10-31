@@ -1,6 +1,6 @@
 (() => {
  const mark=document.querySelector('.avatar');
- if(!mark)return;
+ if(!mark||document.documentElement.classList.contains('lite'))return;
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
  const fine=matchMedia('(hover: hover) and (pointer: fine)');
  const particles=[];
@@ -19,6 +19,7 @@
  let frame=0,last=0,pointer=null;
  function tick(time){
   frame=0;
+  if(document.documentElement.classList.contains('lite')){particles.forEach(p=>{p.el.style.transform='none';});return;}
   const dt=Math.min((time-(last||time))/1000,.032);last=time;
   const box=mark.getBoundingClientRect();
   let moving=false;

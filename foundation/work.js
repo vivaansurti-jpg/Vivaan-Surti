@@ -101,7 +101,7 @@ function paint(){
  if(label!==previousCounter){counter.textContent=label;previousCounter=label;}
 
 }
-function tick(time){frame=0;if(!active||document.hidden||reduced.matches){lastTime=0;moving(false);return;}const dt=Math.min(64,time-(lastTime||time));lastTime=time;current+=(target-current)*(1-Math.exp(-dt/180));if(Math.abs(target-current)<.00001)current=target;paint();if(current!==target)frame=requestAnimationFrame(tick);else{lastTime=0;moving(false);}}
+function tick(time){frame=0;if(!active||document.hidden||reduced.matches){lastTime=0;moving(false);return;}const dt=Math.min(64,time-(lastTime||time));lastTime=time;current=document.documentElement.classList.contains('lite')?target:current+(target-current)*(1-Math.exp(-dt/180));if(Math.abs(target-current)<.00001)current=target;paint();if(current!==target)frame=requestAnimationFrame(tick);else{lastTime=0;moving(false);}}
 function wake(){if(!frame&&active&&!document.hidden&&!reduced.matches){frame=requestAnimationFrame(tick);moving(true);}}
 // While the gallery is moving, the slow background dots pause (no one notices
 // during a scroll) so weaker machines spend every frame on the gallery itself.
