@@ -53,3 +53,15 @@ html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padd
 
 /* Work cards are links to each project's page. */
 a.work-card{display:block;cursor:pointer;text-decoration:none}
+
+/* Compact sliding theme switch, inspired by darioamodei.com. */
+#theme{width:44px;min-width:44px;min-height:44px;padding:0;border-radius:22px;color:var(--foreground)}
+#theme .theme-track{display:block;position:relative;width:38px;height:20px;border-radius:20px;background:#22211f;transition:background-color .2s ease}
+#theme .theme-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#faf9f6;transition:transform .2s ease,background-color .2s ease}
+[data-theme="dark"] #theme .theme-track{background:#faf9f6}
+[data-theme="dark"] #theme .theme-thumb{background:#22211f;transform:translateX(18px)}
+@media(prefers-reduced-motion:reduce){#theme .theme-track,#theme .theme-thumb{transition:none}}
+/* The thumb remains mounted so its position can interpolate on each toggle. */
+.theme-switching #theme .theme-track{transition:background-color .2s ease!important}
+.theme-switching #theme .theme-thumb{transition:transform .2s ease,background-color .2s ease!important}
+@media(prefers-reduced-motion:reduce){.theme-switching #theme .theme-track,.theme-switching #theme .theme-thumb{transition:none!important}}

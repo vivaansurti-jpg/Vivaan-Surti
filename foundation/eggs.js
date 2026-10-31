@@ -53,7 +53,7 @@
  if(!themeButton){root.classList.remove('lights-out-pending');return;}
  let clicks=[],dark=null,raf=0,last=0,tx=innerWidth/2,ty=innerHeight/2,lx=tx,ly=ty;
  themeButton.addEventListener('click',e=>{
-  if(dark){e.stopImmediatePropagation();lightsOn();return;}   // this click only turns the lights back on
+  if(dark){clicks=[];lightsOn();return;}   // also allow the normal theme toggle to update the switch
   const now=performance.now();
   clicks=clicks.filter(t=>now-t<2500);clicks.push(now);
   if(clicks.length>=6){clicks=[];lightsOut();}

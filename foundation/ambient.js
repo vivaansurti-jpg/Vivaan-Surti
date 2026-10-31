@@ -11,9 +11,7 @@ for(let i=0;i<particleCount;i++){
  dot.style.cssText=`width:${size}px;height:${size}px;left:${(i*7.5)%100}%;top:${(i*13.7)%100}%;--duration:8s;--delay:-${(1+(i*.73)%7).toFixed(2)}s`;
  particles.append(dot);
 }
-const sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2M20 12h2m-13.66 5.66-1.41 1.41m14.14-14.14-1.41 1.41"/>';
-const moon='<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>';
-function renderTheme(){const dark=root.dataset.theme==='dark';button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(dark?sun:moon)+'</svg>';button.setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' mode')}
+function renderTheme(){const dark=root.dataset.theme==='dark';if(!button.firstElementChild)button.innerHTML='<span class="theme-track" aria-hidden="true"><span class="theme-thumb"></span></span>';button.setAttribute('role','switch');button.setAttribute('aria-checked',String(dark));button.setAttribute('aria-label','Dark mode');button.title='Switch to '+(dark?'light':'dark')+' mode';}
 try{root.dataset.theme=localStorage.getItem('portfolio-theme')||'dark'}catch{}renderTheme();
 function applyTheme(theme){root.dataset.theme=theme;try{localStorage.setItem('portfolio-theme',theme)}catch{}renderTheme();}
 // Instant switch: colour transitions are suppressed, the new styles are
