@@ -2,8 +2,7 @@
 .motion-reveal-pending{opacity:0}
 /* Intro starts hidden from first paint (set in <head>), so it never flashes before animating. */
 .motion-intro :is(.intro,.site-nav a,.site-nav button){opacity:0}
-/* Theme switch: one 0.4s crossfade of the whole page; nothing fades separately underneath it. */
-::view-transition-old(root),::view-transition-new(root){animation-duration:.4s;animation-timing-function:ease}
+/* Theme switch is instant: colour transitions are suppressed while it applies. */
 .theme-switching *,.theme-switching *::before,.theme-switching *::after{transition:none!important}
 body,.site-nav,.work-letter,.work-caption,.work-card-surface,.eyebrow,.intro p,.outro p,.intro-link,.outro a,#theme{transition:color .65s ease,background-color .65s ease,border-color .65s ease,outline-color .65s ease}
 body{transition:color .65s ease}

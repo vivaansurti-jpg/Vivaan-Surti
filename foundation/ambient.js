@@ -16,19 +16,13 @@ const moon='<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.8
 function renderTheme(){const dark=root.dataset.theme==='dark';button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(dark?sun:moon)+'</svg>';button.setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' mode')}
 try{root.dataset.theme=localStorage.getItem('portfolio-theme')||'dark'}catch{}renderTheme();
 function applyTheme(theme){root.dataset.theme=theme;try{localStorage.setItem('portfolio-theme',theme)}catch{}renderTheme();}
-// 0.4s crossfade of the whole page; individual colour transitions are
-// suppressed so nothing fades separately underneath it.
-let themeChanging=false;
+// Instant switch: colour transitions are suppressed, the new styles are
+// flushed in one go (a few ms), then transitions are restored.
 button.addEventListener('click',()=>{
- if(themeChanging)return;
- const theme=root.dataset.theme==='dark'?'light':'dark';
  root.classList.add('theme-switching');
- if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches){
-  applyTheme(theme);document.body.offsetHeight;root.classList.remove('theme-switching');return;
- }
- themeChanging=true;
- const t=document.startViewTransition(()=>applyTheme(theme));
- t.finished.finally(()=>{root.classList.remove('theme-switching');themeChanging=false;});
+ applyTheme(root.dataset.theme==='dark'?'light':'dark');
+ document.body.offsetHeight;
+ root.classList.remove('theme-switching');
 });
 const glow=document.querySelector('.glow');
 const dotNodes=Array.from(particles.children);

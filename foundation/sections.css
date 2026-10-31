@@ -51,3 +51,11 @@ a.post-row[href]{cursor:pointer}
  .site-footer{padding:96px 20px 40px}
 }
 @media(prefers-reduced-motion:reduce){.avatar,.timeline li{transition:none}}
+
+/* Typed headline. The full line is in the page for screen readers, search
+   and reduced motion; the caret only exists while JavaScript types it. */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.intro h1 .caret{display:inline-block;width:3px;height:.85em;margin-left:6px;vertical-align:-.06em;background:currentColor;animation:caret-blink 1s steps(1) infinite}
+.intro h1.is-typing .caret{animation:none}
+.intro h1 .caret.caret-out{animation:none;opacity:0;transition:opacity .4s ease}
+@keyframes caret-blink{50%{opacity:0}}

@@ -76,7 +76,9 @@ function paint(){
  let visibleIndex=0;
  cards.forEach((card,i)=>{
   const center=.15+i*(.70/(cards.length-1));
-  const halfWindow=.70/(cards.length-1);
+  // Each project is on screen for a little over its own slot (0.55 of the
+ // previous overlap), so they pass one at a time with a short pause between.
+ const halfWindow=.55*.70/(cards.length-1);
   const t=clamp((current-center+halfWindow)/(2*halfWindow));
   // A slow-motion profile: a steady middle
   // with quartic entry/exit shoulders. Scroll supplies the clock.
