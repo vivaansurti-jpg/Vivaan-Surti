@@ -193,7 +193,7 @@
   if(!reduce.matches)el.animate([{opacity:0,translate:'0 20px',scale:'.95'},{opacity:1,translate:'0 0',scale:'1'}],{duration:1000,easing:expo,fill:'backwards'});
   decorationObserver.unobserve(el);
  }),{threshold:.15});
- document.querySelectorAll('.planet,.asteroid,.work-deco').forEach(el=>decorationObserver.observe(el));
+ document.querySelectorAll('.planet').forEach(el=>decorationObserver.observe(el));
  // One-time reveals, leaving the scroll-driven Work scene under its own clock.
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
   if(!entry.isIntersecting)return;
