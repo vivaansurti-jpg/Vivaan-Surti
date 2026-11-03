@@ -6,6 +6,23 @@ const scene=section.querySelector('.work-scene');
 const mask=section.querySelector('.work-mask');
 const outline=section.querySelector('.mask-line');
 const counter=section.querySelector('.work-counter');
+const desktopNav=document.querySelector('.page-nav');
+const desktopLinks=Array.from(desktopNav.querySelectorAll('a'));
+let navGeometry=[];
+function measureNavigation(){
+ desktopLinks.forEach(link=>link.style.removeProperty('transform'));
+ if(innerWidth<768){desktopNav.style.removeProperty('--nav-inactive-opacity');navGeometry=[];return;}
+ const gap=44,total=desktopLinks.reduce((sum,link)=>sum+link.offsetWidth,0)+gap*(desktopLinks.length-1);
+ let x=(innerWidth-total)/2;
+ navGeometry=desktopLinks.map(link=>{const box=link.getBoundingClientRect();const point={x:x-box.left,y:14-box.top};x+=box.width+gap;return point;});
+}
+function paintNavigation(progress){
+ if(innerWidth<768)return;
+ // Lift first, then fan outward; both curves reverse with the capsule.
+ const lift=smooth(progress/.85),fan=smooth((progress-.15)/.85);
+ desktopNav.style.setProperty('--nav-inactive-opacity',(1-progress*.18).toFixed(3));
+ desktopLinks.forEach((link,i)=>{const point=navGeometry[i];if(point)link.style.transform=`translate3d(${(point.x*fan).toFixed(2)}px,${(point.y*lift).toFixed(2)}px,0)`;});
+}
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const smooth=v=>{v=clamp(v);return v*v*(3-2*v)};
@@ -32,13 +49,25 @@ function measure(){
  width=stage.clientWidth;height=stage.clientHeight;start=section.getBoundingClientRect().top+scrollY;range=Math.max(1,section.offsetHeight-height);
  // Read dimensions together, only at initialization, font load, and resize.
  cards.forEach(card=>{card.width=card.el.offsetWidth;card.height=card.el.offsetHeight});
- mask.setAttribute('viewBox',`0 0 ${width} ${height}`);previousSpread=-1;updateTarget();paint();
+ measureNavigation();
+ mask.setAttribute('viewBox',`0 0 ${width} ${height}`);previousSpread=-1;
+ target=clamp((scrollY-start)/range);current=target;lastTime=0;paint();wake();
 }
-function updateTarget(){target=clamp((scrollY-start)/range);wake();}
+function updateTarget(){
+ target=clamp((scrollY-start)/range);
+ // A fast scroll can leave the pinned stage before its eased animation catches
+ // up. Finish at the boundary immediately, even while the gallery is asleep.
+ if(target===0||target===1){
+  if(frame){cancelAnimationFrame(frame);frame=0;}
+  current=target;lastTime=0;paint();moving(false);return;
+ }
+ wake();
+}
 function capsule(cx,cy,w,h){const r=w/2;return `M ${cx-r} ${cy-h/2+r} A ${r} ${r} 0 0 1 ${cx+r} ${cy-h/2+r} L ${cx+r} ${cy+h/2-r} A ${r} ${r} 0 0 1 ${cx-r} ${cy+h/2-r} Z`;}
 function paint(){
- if(reduced.matches){scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent=projects.length+' projects';return;}
+ if(reduced.matches){paintNavigation(0);scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent=projects.length+' projects';return;}
  const enter=smooth(current/.10),exit=smooth((current-.90)/.10),spread=enter*(1-exit);
+ paintNavigation(spread);
  if(spread!==previousSpread){
  mask.style.visibility=spread===1?'hidden':'visible';
  const compactWidth=width<=576?width*.50:width<=987?width/3:Math.min(width/6,314);
@@ -97,7 +126,7 @@ function paint(){
   // Cards naturally enter and leave through the scene's side edges.
   card.el.style.transform=`rotateY(${-p*20}deg) translate3d(${p*(width*.5+cardW)-cardW/2}px,${y}px,${p*p*-80}px) scale(${size})`;
  });
- const label=visibleIndex?String(visibleIndex).padStart(2,'0')+' / '+total:'Selected work';
+ const label=visibleIndex?String(visibleIndex).padStart(2,'0')+' / '+total:'';
  if(label!==previousCounter){counter.textContent=label;previousCounter=label;}
 
 }
@@ -109,7 +138,7 @@ let movingTimer=0;
 function moving(on){clearTimeout(movingTimer);if(on)document.documentElement.classList.add('work-moving');else movingTimer=setTimeout(()=>document.documentElement.classList.remove('work-moving'),250);}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastTime=0;updateTarget()}});
 addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure);reduced.addEventListener('change',()=>{current=target;measure()});
-new IntersectionObserver(entries=>{active=entries[0].isIntersecting;stage.classList.toggle('is-active',active);if(active){updateTarget();wake();}},{rootMargin:'100px'}).observe(section);
+new IntersectionObserver(entries=>{active=entries[0].isIntersecting;stage.classList.toggle('is-active',active);if(active){lastTime=0;updateTarget();wake();}else{if(frame){cancelAnimationFrame(frame);frame=0;}current=target;lastTime=0;paint();moving(false);}},{rootMargin:'100px'}).observe(section);
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{
  const dest=document.querySelector(link.hash);if(!dest)return;event.preventDefault();history.pushState(null,'',link.hash);
  const top=dest.getBoundingClientRect().top+scrollY;
