@@ -21,13 +21,17 @@
  const away=['come back :(','hey, still there?','psst… over here','don’t be a stranger','viv misses you','👀'];
  const back=['welcome back!','oh hi again','there you are'];
  let title=document.title,backTimer=0;
+ document.addEventListener('site:title',event=>{
+  title=event.detail;
+  if(!document.hidden&&!backTimer)document.title=title;
+ });
  document.addEventListener('visibilitychange',()=>{
-  clearTimeout(backTimer);
+  clearTimeout(backTimer);backTimer=0;
   if(document.hidden){
-   if(!away.includes(document.title)&&!back.includes(document.title))title=document.title;
+   // Preserve the current section title while the playful message is showing.
    document.title=pick(away);
   }else if(Math.random()<.5){
-   document.title=pick(back);backTimer=setTimeout(()=>{document.title=title;},1800);
+   document.title=pick(back);backTimer=setTimeout(()=>{backTimer=0;document.title=title;},1800);
   }else document.title=title;
  });
 
