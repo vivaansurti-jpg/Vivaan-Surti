@@ -139,10 +139,41 @@ function moving(on){clearTimeout(movingTimer);if(on)document.documentElement.cla
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastTime=0;updateTarget()}});
 addEventListener('scroll',updateTarget,{passive:true});addEventListener('resize',measure);reduced.addEventListener('change',()=>{current=target;measure()});
 new IntersectionObserver(entries=>{active=entries[0].isIntersecting;stage.classList.toggle('is-active',active);if(active){lastTime=0;updateTarget();wake();}else{if(frame){cancelAnimationFrame(frame);frame=0;}current=target;lastTime=0;paint();moving(false);}},{rootMargin:'100px'}).observe(section);
+// Navbar travel excludes the pinned gallery's extra scroll distance.
+let navigationFrame=0;
+function cancelNavigation(){cancelAnimationFrame(navigationFrame);navigationFrame=0;}
+addEventListener('wheel',cancelNavigation,{passive:true});
+addEventListener('touchstart',cancelNavigation,{passive:true});
+addEventListener('keydown',event=>{if(['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(event.key))cancelNavigation();});
+function navigateTo(top){
+ cancelNavigation();
+ const from=scrollY,to=Math.min(top,document.documentElement.scrollHeight-innerHeight);
+ const forward=to>=from;
+ // Collapse only the part of the gallery lying between the current and target positions.
+ const low=Math.max(Math.min(from,to),start),high=Math.min(Math.max(from,to),start+range);
+ const skipped=Math.max(0,high-low),distance=Math.abs(to-from)-skipped;
+ const began=performance.now(),duration=650;
+ function step(now){
+  const t=Math.min(1,(now-began)/duration),ease=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const travel=distance*ease;
+  let position=from+(forward?travel:-travel);
+  if(skipped&& (forward?position>=low:position<=high))position+=forward?skipped:-skipped;
+  window.scrollTo({top:t===1?to:position,behavior:'instant'});
+  // Avoid leaving an eased gallery frame behind after the skipped interval.
+  target=clamp((scrollY-start)/range);current=target;paint();
+  navigationFrame=t<1?requestAnimationFrame(step):0;
+ }
+ navigationFrame=requestAnimationFrame(step);
+}
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',event=>{
- const dest=document.querySelector(link.hash);if(!dest)return;event.preventDefault();history.pushState(null,'',link.hash);
+ if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||!link.hash)return;
+ const dest=document.getElementById(decodeURIComponent(link.hash.slice(1)));if(!dest)return;event.preventDefault();history.pushState(null,'',link.hash);
  const top=dest.getBoundingClientRect().top+scrollY;
  // Landing exactly at the section start presents the closed capsule first.
- window.scrollTo({top,behavior:'instant'});current=target=dest===section?0:clamp((top-start)/range);paint();
+ const smoothNavigation=Boolean(link.closest('.page-nav'))&&!reduced.matches;
+ cancelNavigation();
+ if(smoothNavigation)navigateTo(top);else window.scrollTo({top,behavior:'instant'});
+ // During smooth navigation, scroll events drive the gallery at its actual position.
+ if(!smoothNavigation){current=target=dest===section?0:clamp((top-start)/range);paint();}
 }));
 measure();current=target;paint();document.fonts.ready.then(measure);
