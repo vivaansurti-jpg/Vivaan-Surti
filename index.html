@@ -1,7 +1,30 @@
 <!doctype html>
 <html lang="en" data-theme="dark">
 <head><script>if(performance.getEntriesByType('navigation')[0]?.type==='reload'){history.scrollRestoration='manual';history.replaceState(null,'',location.pathname+location.search);addEventListener('pageshow',()=>scrollTo({top:0,left:0,behavior:'instant'}),{once:true})}</script><script>if(location.pathname.endsWith("/foundation/index.html")){var base=document.createElement("base");base.href="../";document.head.appendChild(base)}</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><title>Vivaan Surti</title><meta name="description" content="Vivaan Surti's personal website."><meta name="author" content="Vivaan Surti"><meta property="og:title" content="Vivaan Surti"><meta property="og:description" content="Vivaan Surti's personal website."><meta property="og:type" content="website"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vivaan Surti"}</script>
-<script>(function(){var r=document.documentElement;try{var t=localStorage.getItem('portfolio-theme');if(t)r.dataset.theme=t}catch(e){}if(!matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('motion-intro');setTimeout(function(){r.classList.remove('motion-intro')},3000)}})()</script><script>try{if(sessionStorage.getItem('lights-out'))document.documentElement.classList.add('lights-out-pending')}catch(e){}</script><link rel="stylesheet" href="./foundation/style.css?v=bg-4"><link rel="stylesheet" href="./foundation/work.css?v=gap-2"><link rel="stylesheet" href="./foundation/motion.css?v=stars-1"><link rel="stylesheet" href="./foundation/sections.css?v=outline-1"></head>
+<script>(function(){var r=document.documentElement;try{var t=localStorage.getItem('portfolio-theme');if(t)r.dataset.theme=t}catch(e){}if(!matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('motion-intro');setTimeout(function(){r.classList.remove('motion-intro')},3000)}})()</script><script>try{if(sessionStorage.getItem('lights-out'))document.documentElement.classList.add('lights-out-pending')}catch(e){}</script><link rel="stylesheet" href="./foundation/style.css?v=bg-4"><link rel="stylesheet" href="./foundation/work.css?v=gap-2"><link rel="stylesheet" href="./foundation/motion.css?v=stars-1"><link rel="stylesheet" href="./foundation/sections.css?v=outline-1"><style>
+.dock-icon{display:none}
+/* Local mobile dock preview; desktop navigation keeps its existing layout. */
+@media(max-width:767px){
+ .page-nav{position:fixed;inset:auto 16px calc(12px + env(safe-area-inset-bottom));max-width:420px;margin-inline:auto;display:block;padding:0;isolation:isolate}
+ .page-nav .nav-toggle,.page-nav .nav-backdrop{display:none}
+ .page-nav .nav-links-panel{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:0;min-width:0;max-height:none;width:100%;overflow:visible;box-sizing:border-box;padding:5px;border:1px solid var(--rule);border-radius:14px;background:var(--background);box-shadow:0 4px 18px rgb(0 0 0 / 12%);opacity:1;visibility:visible;transform:none;pointer-events:auto}
+ .page-nav .nav-links-panel::before{content:"";position:absolute;z-index:0;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/4);border-radius:9px;background:color-mix(in srgb,var(--foreground) 9%,var(--background));transform:translateX(var(--dock-index,0%));transition:transform 220ms cubic-bezier(.2,.7,.2,1);pointer-events:none}
+ .page-nav .nav-links-panel:has(a:nth-child(2)[aria-current]){--dock-index:100%}
+ .page-nav .nav-links-panel:has(a:nth-child(3)[aria-current]){--dock-index:200%}
+ .page-nav .nav-links-panel:has(a:nth-child(4)[aria-current]){--dock-index:300%}
+ .page-nav .nav-links-panel a{z-index:1;display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:56px;padding:4px 0 10px;box-sizing:border-box;width:100%;border:0;font:400 11px/1.2 ui-sans-serif,system-ui,sans-serif;letter-spacing:.01em;color:var(--muted-foreground);transition:color 160ms ease;touch-action:manipulation}
+ .page-nav .nav-links-panel a[aria-current]{color:var(--foreground);font-weight:500}
+ .page-nav .dock-icon{display:block;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+ .page-nav a[aria-current] .dock-icon{color:var(--foreground)}
+ .page-nav .nav-links-panel a::after{content:"";display:block;position:absolute;left:50%;right:auto;bottom:4px;width:3px;height:3px;margin:0;border-radius:50%;background:var(--foreground);opacity:0;transform:translateX(-50%);transition:opacity 160ms ease}
+ .page-nav .nav-links-panel a[aria-current]::after{opacity:1}
+ .page-nav .nav-links-panel a:focus-visible{outline-offset:-3px;border-radius:12px}
+ .site-footer{padding-bottom:calc(132px + env(safe-area-inset-bottom))}
+ .work-meta{bottom:calc(110px + env(safe-area-inset-bottom))}
+ html{scroll-padding-bottom:116px}
+}
+@media(max-width:767px) and (prefers-reduced-motion:reduce){.page-nav .nav-links-panel::before,.page-nav .nav-links-panel a{transition:none}}
+</style></head>
 <body><div class="background glow" aria-hidden="true"></div>
 <div class="background particles" aria-hidden="true"></div>
 <div class="background grid" aria-hidden="true"><svg><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" opacity="0.6" stroke="var(--secondary-foreground)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg></div>
@@ -10,10 +33,10 @@
 <nav class="page-nav" aria-label="Main navigation">
  <button class="nav-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navigation-links"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
  <div class="nav-links-panel" id="navigation-links">
- <a href="#home" aria-current="location">Home</a>
- <a href="#work">Work</a>
- <a href="#writing">Writing</a>
- <a href="#contact">Contact</a>
+ <a href="#home" aria-current="location"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10 12 3l9 7M5 9v11h5v-6h4v6h5V9"/></svg><span>Home</span></a>
+ <a href="#work"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7V4h14v3M3 8h18v12H3zM3 12h18M10 12v3h4v-3"/></svg><span>Work</span></a>
+ <a href="#writing"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 4 5 5M4 20l5-1L21 7a2.1 2.1 0 0 0-4-4L5 15z"/></svg><span>Writing</span></a>
+ <a href="#contact"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19 19 5M5 5h14v14"/></svg><span>Contact</span></a>
  </div>
 </nav>
 <main>
@@ -102,4 +125,12 @@
  <p data-reveal>For collaborations, questions, or opportunities, please write to</p>
  <a class="footer-email" href="mailto:you@example.com" data-reveal>you@example.com</a>
  <div class="footer-bottom"><span>© 2026 Vivaan Surti</span><a href="#home">Back to the top ↑</a></div>
-</footer><script src="./foundation/ambient.js?v=stars-4"></script><script src="./foundation/projects.js?v=pj-1"></script><script src="./foundation/work.js?v=gap-2"></script><script src="./foundation/planet.js?v=outline-1"></script><script src="./foundation/greetings.js?v=greet-4"></script><script src="./foundation/motion.js?v=greet-7"></script><script src="./foundation/eggs.js?v=torch-1"></script><script src="./foundation/avatar.js"></script><script src="./foundation/navigation.js"></script></body></html>
+</footer><script src="./foundation/ambient.js?v=stars-4"></script><script src="./foundation/projects.js?v=pj-1"></script><script src="./foundation/work.js?v=smooth-4"></script><script src="./foundation/planet.js?v=outline-1"></script><script src="./foundation/greetings.js?v=greet-4"></script><script src="./foundation/motion.js?v=greet-7"></script><script src="./foundation/eggs.js?v=torch-1"></script><script src="./foundation/avatar.js"></script><script src="./foundation/navigation.js"></script><script>
+// The dock stays accessible while the shared hamburger controller is closed.
+(()=>{
+ const panel=document.getElementById('navigation-links');
+ const expose=()=>{if(panel.inert)panel.inert=false;};
+ new MutationObserver(expose).observe(panel,{attributes:true,attributeFilter:['inert']});
+ expose();
+})();
+</script></body></html>

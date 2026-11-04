@@ -1,12 +1,31 @@
 // Track the current section without interrupting the Work scroll animation.
 (() => {
  const nav=document.querySelector('.page-nav'),toggle=nav.querySelector('.nav-toggle');
- function close(){nav.classList.remove('is-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');}
- toggle.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');});
- nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',close));
+ const panel=nav.querySelector('.nav-links-panel');
+ const mobile=matchMedia('(max-width:767px)');
+ const backdrop=document.createElement('div');backdrop.className='nav-backdrop';backdrop.setAttribute('aria-hidden','true');nav.prepend(backdrop);
+ toggle.querySelector('svg').innerHTML='<path class="nav-line" d="M4 6h16"/><path class="nav-line" d="M4 12h16"/><path class="nav-line" d="M4 18h16"/>';
+ function setOpen(open){
+  nav.classList.toggle('is-open',open);
+  toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+  panel.inert=mobile.matches&&!open;
+ }
+ function close(){setOpen(false);}
+ toggle.addEventListener('click',()=>setOpen(!nav.classList.contains('is-open')));
+ nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{if(mobile.matches)toggle.focus({preventScroll:true});close();}));
+ backdrop.addEventListener('click',close);
  document.addEventListener('click',event=>{if(!nav.contains(event.target))close();});
- document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classList.contains('is-open')){close();toggle.focus();}});
- matchMedia('(min-width:768px)').addEventListener('change',close);
+ document.addEventListener('keydown',event=>{
+  if(!mobile.matches||!nav.classList.contains('is-open'))return;
+  if(event.key==='Escape'){close();toggle.focus();}
+  if(event.key==='Tab'){
+   const items=[toggle,...panel.querySelectorAll('a')],first=items[0],last=items[items.length-1];
+   if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+   else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  }
+ });
+ mobile.addEventListener('change',close);
+ close();
  const links=Array.from(document.querySelectorAll('.page-nav a'));
  const sections=links.map(link=>document.querySelector(link.hash));
  let pending=false,lastTitle='';

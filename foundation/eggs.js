@@ -18,7 +18,7 @@
  }
 
  // Leave the tab and its title calls you back.
- const away=['come back :(','hey, still there?','psst… over here','don’t be a stranger','viv misses you','👀'];
+ const away=['come back :(','hey, still there?','psst… over here','don’t be a stranger','👀'];
  const back=['welcome back!','oh hi again','there you are'];
  let title=document.title,backTimer=0;
  document.addEventListener('site:title',event=>{
