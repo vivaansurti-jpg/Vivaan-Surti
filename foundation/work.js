@@ -66,6 +66,7 @@ function updateTarget(){
 function capsule(cx,cy,w,h){const r=w/2;return `M ${cx-r} ${cy-h/2+r} A ${r} ${r} 0 0 1 ${cx+r} ${cy-h/2+r} L ${cx+r} ${cy+h/2-r} A ${r} ${r} 0 0 1 ${cx-r} ${cy+h/2-r} Z`;}
 function paint(){
  if(reduced.matches){paintNavigation(0);scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent=projects.length+' projects';return;}
+ const lite=document.documentElement.classList.contains('lite');
  const enter=smooth(current/.10),exit=smooth((current-.90)/.10),spread=enter*(1-exit);
  paintNavigation(spread);
  if(spread!==previousSpread){
@@ -75,7 +76,7 @@ function paint(){
  const cw=compactWidth+(expanded-compactWidth)*spread,ch=height*.80+(expanded-height*.80)*spread;
  const outer=capsule(width/2,height/2,cw,ch),inner=capsule(width/2,height/2,Math.max(1,cw-24),Math.max(1,ch-24));
  outline.setAttribute('d',outer+' '+inner);
- scene.style.clipPath=spread===1?'none':`path('${inner}')`;
+ scene.style.clipPath=spread===1?'none':lite?`inset(${(height-ch+24)/2}px ${(width-cw+24)/2}px round ${Math.max(1,cw-24)/2}px)`:`path('${inner}')`;
  scene.style.setProperty('--spread',spread.toFixed(3));
  previousSpread=spread;
  }
@@ -100,7 +101,7 @@ function paint(){
   if(!visible)return;
   const rowY=(row-1.5)*letterSize*(phone?1.05:1.05+spread*.09);
   const y=rowY+(row-1.5)*head*head*letterSize*.12*spread;
-  el.style.transform=`translate(-50%,-50%) translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) rotateY(${(-head*10*spread).toFixed(2)}deg) scale(${(phone ? .76 : .76+spread*.06)*letterScale},${letterScale})`;
+  el.style.transform=`translate(-50%,-50%) translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) rotateY(${(lite?0:-head*10*spread).toFixed(2)}deg) scale(${(phone ? .76 : .76+spread*.06)*letterScale},${letterScale})`;
  });
  let visibleIndex=0;
  cards.forEach((card,i)=>{
@@ -124,7 +125,7 @@ function paint(){
   const y=card.y*cardH*(smallScreen?1:.5)-cardH/2;
   // Transform order: local rotation, translation, scale.
   // Cards naturally enter and leave through the scene's side edges.
-  card.el.style.transform=`rotateY(${-p*20}deg) translate3d(${p*(width*.5+cardW)-cardW/2}px,${y}px,${p*p*-80}px) scale(${size})`;
+  card.el.style.transform=`rotateY(${lite?0:-p*20}deg) translate3d(${p*(width*.5+cardW)-cardW/2}px,${y}px,${lite?0:p*p*-80}px) scale(${size})`;
  });
  const label=visibleIndex?String(visibleIndex).padStart(2,'0')+' / '+total:'';
  if(label!==previousCounter){counter.textContent=label;previousCounter=label;}
@@ -176,4 +177,5 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('c
  // During smooth navigation, scroll events drive the gallery at its actual position.
  if(!smoothNavigation){current=target=dest===section?0:clamp((top-start)/range);paint();}
 }));
+document.addEventListener('site:lite',()=>{previousSpread=-1;current=target;paint();});
 measure();current=target;paint();document.fonts.ready.then(measure);

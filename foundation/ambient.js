@@ -54,17 +54,25 @@ window.addEventListener('pointermove',event=>{
 document.documentElement.addEventListener('pointerleave',stopLights);
 window.addEventListener('blur',stopLights);
 document.addEventListener('visibilitychange',()=>{root.classList.toggle('ambient-paused',document.hidden);if(document.hidden)stopLights();});
+function enableLite(){
+ if(root.classList.contains('lite'))return;
+ root.classList.add('lite');stopLights();
+ document.dispatchEvent(new Event('site:lite'));
+}
 // If the page still can't hold ~40fps a couple of seconds after load,
 // switch to the lighter mode for the rest of the visit.
 function watchFrames(){
  if(root.classList.contains('lite')||reducedAmbient.matches)return;
- const times=[];let last=0;
+ const times=[];let last=0,slowWindows=0;
  function sample(t){
   if(document.hidden)return;
-  if(last)times.push(t-last);last=t;
+  if(last&&t-last<250)times.push(t-last);last=t;
   if(times.length<90){requestAnimationFrame(sample);return;}
   times.sort((a,b)=>a-b);
-  if(times[45]>25){root.classList.add('lite');stopLights();}
+  slowWindows=times[45]>25?slowWindows+1:0;
+  if(slowWindows>=2){enableLite();return;}
+  // Require sustained slow frames; ignore isolated load or tab-switch stalls.
+  if(slowWindows){times.length=0;last=0;requestAnimationFrame(sample);}
  }
  requestAnimationFrame(sample);
 }
@@ -97,5 +105,9 @@ addEventListener('load',()=>setTimeout(watchFrames,2000));
   ],{duration:2800+Math.random()*1200,easing:'cubic-bezier(.35,0,.65,1)'});   // slow, unhurried crossing
   flight.finished.then(()=>star.remove(),()=>star.remove());
  }
- (function next(){setTimeout(()=>{shoot();next();},7000+Math.random()*11000);})();
+ let timer=0;
+ function next(){if(root.classList.contains('lite')||reduceStars.matches)return;timer=setTimeout(()=>{shoot();next();},7000+Math.random()*11000);}
+ document.addEventListener('site:lite',()=>{clearTimeout(timer);sky.getAnimations({subtree:true}).forEach(a=>a.cancel());sky.replaceChildren();});
+ reduceStars.addEventListener('change',()=>{clearTimeout(timer);if(!reduceStars.matches)next();});
+ next();
 })();

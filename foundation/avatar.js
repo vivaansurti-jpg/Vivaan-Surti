@@ -39,7 +39,7 @@
   });
   if(moving)frame=requestAnimationFrame(tick);else last=0;
  }
- function wake(){if(!frame&&!reduce.matches)frame=requestAnimationFrame(tick);}
+ function wake(){if(!frame&&!reduce.matches&&!document.documentElement.classList.contains('lite'))frame=requestAnimationFrame(tick);}
  if(!reduce.matches)particles.forEach(p=>{
   p.dx=(Math.random()-.5)*90;p.dy=(Math.random()-.5)*90;
   p.el.animate([{opacity:0},{opacity:1}],{duration:550,delay:Math.random()*250,fill:'backwards'});
@@ -48,6 +48,7 @@
  window.addEventListener('pointermove',event=>{pointer={x:event.clientX,y:event.clientY};wake();},{passive:true});
  document.documentElement.addEventListener('pointerleave',()=>{pointer=null;wake();});
  window.addEventListener('blur',()=>{pointer=null;wake();});
+ document.addEventListener('site:lite',()=>{cancelAnimationFrame(frame);frame=0;last=0;particles.forEach(p=>{p.el.style.transform='none';p.el.getAnimations().forEach(a=>a.cancel());});});
  reduce.addEventListener('change',()=>{
   if(reduce.matches){cancelAnimationFrame(frame);frame=0;last=0;particles.forEach(p=>{p.dx=p.dy=p.vx=p.vy=0;p.el.style.transform='none';p.el.getAnimations().forEach(a=>a.cancel());});}
  });

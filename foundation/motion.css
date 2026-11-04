@@ -67,3 +67,10 @@ body{transition:color .65s ease}
 
 .lite .particle{animation:none;opacity:.22;transform:translateY(-50px) scale(.75)}
 .lite .background.stars{display:none}
+
+/* Lite keeps the gallery and navigation, with flat moving surfaces. */
+.lite .work-scene{perspective:none}
+.lite .work-card{transform-style:flat}
+.lite .work-image{transition:none}
+.lite .work-card-surface:hover .work-image,
+.lite .work-card-surface.motion-pressed .work-image{transform:none}

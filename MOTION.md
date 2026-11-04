@@ -44,3 +44,13 @@ Keyboard focus gets the same lift as pointer hover; touch gets no sticky hover.
 
 A single circular reveal grows from the toggle over 700ms
 (cubic-bezier(.65,0,.35,1)) using the View Transitions API.
+
+## Lite mode
+
+Low-core, low-memory, and data-saver devices start in Lite mode. Other devices
+switch after two consecutive slow frame samples, ignoring long isolated stalls.
+Lite keeps the scroll-driven Work gallery, capsule, navigation and pointer glow,
+with flat letters/cards and a rounded inset clip. It skips letter shadows, dot
+lighting, image hover zoom, spring hover motion, avatar physics, shooting stars
+and repeating timeline wiggles. Activating it during a visit cancels decorative
+work already running. Reduced-motion preferences remain a separate static mode.

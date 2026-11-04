@@ -32,7 +32,7 @@
   const s={el,y:0,scale:1,yVelocity:0,scaleVelocity:0,target:{y:0,scale:1},hover:false,focus:false,pressed:false};states.push(s);
   function update(){
    el.classList.toggle('motion-pressed',s.pressed);
-   if(reduce.matches)return;
+   if(reduce.matches||document.documentElement.classList.contains('lite'))return;
    s.target={y:s.pressed?0:s.hover||s.focus?lift:0,scale:s.pressed?press:s.hover||s.focus?scale:1};
    running.add(s);wake();
   }
@@ -180,7 +180,7 @@
  // Writing rows lift slightly on hover.
  document.querySelectorAll('.post-row').forEach(el=>bind(el,{lift:-2,scale:1.01,press:.99}));
  // Timeline bullets wiggle 0→10→-10→0deg over 2s, then rest 4s + .5s per row.
- if(!reduce.matches)document.querySelectorAll('.timeline .bullet').forEach((el,i)=>{
+ if(!reduce.matches&&!document.documentElement.classList.contains('lite'))document.querySelectorAll('.timeline .bullet').forEach((el,i)=>{
   const cycle=6000+500*i,w=2000/cycle,e='ease-in-out';
   animations.add(el.animate([{transform:'rotate(0deg)',offset:0,easing:e},{transform:'rotate(10deg)',offset:w/3,easing:e},{transform:'rotate(-10deg)',offset:2*w/3,easing:e},{transform:'rotate(0deg)',offset:w},{transform:'rotate(0deg)',offset:1}],{duration:cycle,iterations:Infinity}));
  });
@@ -203,6 +203,7 @@
  }),{rootMargin:'0px 0px -50px 0px'});
  document.querySelectorAll('[data-reveal]').forEach(el=>{if(!reduce.matches)el.classList.add('motion-reveal-pending');observer.observe(el);});
  function reset(){running.clear();states.forEach(s=>{s.el.classList.remove('motion-pressed');s.el.style.removeProperty('translate');s.el.style.removeProperty('scale');s.y=0;s.scale=1;s.yVelocity=s.scaleVelocity=0;s.hover=s.focus=s.pressed=false;s.target={y:0,scale:1};});}
+ document.addEventListener('site:lite',()=>{reset();animations.forEach(a=>a.cancel());});
  reduce.addEventListener('change',()=>{if(reduce.matches){reset();animations.forEach(a=>a.cancel());document.querySelectorAll('.motion-reveal-pending').forEach(el=>el.classList.remove('motion-reveal-pending'));}});
  document.addEventListener('visibilitychange',()=>{last=0;if(document.hidden)reset();else wake();});
 })();
