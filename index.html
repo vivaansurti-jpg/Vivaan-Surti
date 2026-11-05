@@ -139,7 +139,7 @@
 // The dock stays accessible while the shared hamburger controller is closed.
 (()=>{
  const panel=document.getElementById('navigation-links');
- const expose=()=>{if(panel.inert)panel.inert=false;};
+ const expose=()=>{if(matchMedia('(max-width:767px)').matches&&panel.inert)panel.inert=false;};
  new MutationObserver(expose).observe(panel,{attributes:true,attributeFilter:['inert']});
  expose();
 })();

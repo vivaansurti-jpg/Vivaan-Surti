@@ -134,3 +134,19 @@ a.post-row[href]{cursor:pointer}
  .page-nav a{opacity:var(--nav-inactive-opacity,1)}
  .page-nav a[aria-current],.page-nav a:hover,.page-nav a:focus-visible{opacity:1}
 }
+
+/* Desktop disclosure stays aligned with the profile image's centre line. */
+@media(min-width:768px){
+ .page-nav{top:var(--desktop-menu-top,106px);width:96px;max-width:96px;display:flex;flex-direction:column;align-items:center;gap:12px}
+ .page-nav .nav-toggle{display:grid;place-items:center;width:44px;height:44px;padding:11px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--foreground);cursor:pointer;transform:translateY(-8px)}
+ .nav-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+ .nav-toggle .nav-line{transition:transform 320ms cubic-bezier(.22,.61,.36,1),opacity 220ms ease}
+ .is-open .nav-line:first-child{transform:translateY(6px) rotate(45deg);transform-origin:12px 6px}
+ .is-open .nav-line:nth-child(2){opacity:0}
+ .is-open .nav-line:last-child{transform:translateY(-6px) rotate(-45deg);transform-origin:12px 18px}
+ .page-nav .nav-links-panel{width:100%;align-items:center;gap:8px;padding:9px 1px;border:0;border-radius:0;background:transparent;box-shadow:none;opacity:0;visibility:hidden;transform:translateY(-12px);pointer-events:none;transition:opacity 320ms ease,transform 420ms cubic-bezier(.22,.61,.36,1),visibility 0s linear 420ms}
+ .page-nav.is-open .nav-links-panel{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;transition-delay:0s}
+ .page-nav a{width:100%;transform:none!important}
+ .page-nav a::after{left:32px;right:32px}
+}
+@media(min-width:768px) and (prefers-reduced-motion:reduce){.page-nav .nav-links-panel,.nav-toggle .nav-line{transition:none}}
