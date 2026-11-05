@@ -17,7 +17,7 @@ function measureNavigation(){
  navGeometry=desktopLinks.map(link=>{const box=link.getBoundingClientRect();const point={x:x-box.left,y:14-box.top};x+=box.width+gap;return point;});
 }
 function paintNavigation(progress){
- if(innerWidth<768||desktopNav.querySelector('.nav-toggle')||progress===previousNavigation)return;
+ if(innerWidth<768||progress===previousNavigation)return;
  previousNavigation=progress;
  // Lift first, then fan outward; both curves reverse with the capsule.
  const lift=smooth(progress/.85),fan=smooth((progress-.15)/.85);
