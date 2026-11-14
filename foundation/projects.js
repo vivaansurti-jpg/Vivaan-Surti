@@ -7,14 +7,15 @@
 //   links     buttons under the title (an empty href hides the button)
 //   features  three blocks on the project page; story is the note near the end
 window.PROJECTS=[
- {slug:'project-01',name:'Project 01'},
- {slug:'project-02',name:'Project 02'},
- {slug:'project-03',name:'Project 03'},
- {slug:'project-04',name:'Project 04'},
- {slug:'project-05',name:'Project 05'},
- {slug:'project-06',name:'Project 06'},
- {slug:'project-07',name:'Project 07'},
- {slug:'project-08',name:'Project 08'},
+ {slug:'project-01',name:'JobScroll'},
+ {slug:'project-02',name:'Amora'},
+ {slug:'project-03',name:'Chapters & Co.'},
+ {slug:'project-04',name:'Obby'},
+ {slug:'project-05',name:'psych'},
+ {slug:'project-06',name:'Mochila'},
+ {slug:'project-07',name:'Helios'},
+ {slug:'project-08',name:'Vector'},
+ {slug:'project-09',name:'Alstroemeria'},
 ].map(p=>({
  tagline:'One line describing what this project does.',
  year:'2026',

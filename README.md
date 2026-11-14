@@ -29,7 +29,7 @@ a bounded translated layer; particle illumination uses cached anchors; hidden
 tabs pause background motion. Work shares Home's original fine grid, dots,
 and flashlight. No separate Work background grid is rendered.
 
-Projects: the Work gallery shows the 8 projects listed in
+Projects: the Work gallery shows the 9 projects listed in
 `foundation/projects.js`, and each card opens that project's page in
 `projects/<slug>/`. Every page is built from its entry in that list (name,
 tagline, year, type, images, buttons, features, story), so edit the list

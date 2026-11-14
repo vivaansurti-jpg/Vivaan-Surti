@@ -87,7 +87,7 @@ addEventListener('load',()=>setTimeout(watchFrames,2000));
  const sky=document.createElement('div');sky.className='background stars';sky.setAttribute('aria-hidden','true');
  document.body.prepend(sky);
  function shoot(){
-  if(document.hidden||reduceStars.matches||root.classList.contains('lite'))return;
+  if(document.hidden||reduceStars.matches)return;
   const w=innerWidth,h=innerHeight,ltr=Math.random()<.5;
   const slope=(10+Math.random()*16)*Math.PI/180;      // gentle downward angle
   const len=100+Math.random()*90;                        // tail length
@@ -106,8 +106,14 @@ addEventListener('load',()=>setTimeout(watchFrames,2000));
   flight.finished.then(()=>star.remove(),()=>star.remove());
  }
  let timer=0;
- function next(){if(root.classList.contains('lite')||reduceStars.matches)return;timer=setTimeout(()=>{shoot();next();},7000+Math.random()*11000);}
- document.addEventListener('site:lite',()=>{clearTimeout(timer);sky.getAnimations({subtree:true}).forEach(a=>a.cancel());sky.replaceChildren();});
- reduceStars.addEventListener('change',()=>{clearTimeout(timer);if(!reduceStars.matches)next();});
- next();
+ function next(delay=7000+Math.random()*11000){
+  if(reduceStars.matches)return;
+  timer=setTimeout(()=>{shoot();next();},delay);
+ }
+ reduceStars.addEventListener('change',()=>{
+  clearTimeout(timer);
+  sky.getAnimations({subtree:true}).forEach(animation=>animation.cancel());
+  next(2500);
+ });
+ next(2500);
 })();
