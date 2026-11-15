@@ -41,10 +41,14 @@ projects.forEach((project,i)=>{
  const num=String(i+1).padStart(2,'0');
  // Each card opens that project's own page.
  const el=document.createElement('a');el.className='work-card';el.href=window.projectHref(project.slug);el.setAttribute('aria-label',project.name+' — open project page');
- const img=document.createElement('img');img.className='work-image';img.src=project.image?new URL(project.image,window.siteRoot).href:blank;img.alt='';img.loading='lazy';img.decoding='async';img.width=1082;img.height=636;img.draggable=false;
+ const img=document.createElement('img');img.className='work-image';img.src=(project.workImage||project.image)?new URL(project.workImage||project.image,window.siteRoot).href:blank;img.alt='';img.loading='lazy';img.decoding='async';img.width=1082;img.height=636;img.draggable=false;
  const caption=document.createElement('span');caption.className='work-caption';caption.innerHTML='<span></span><span>'+num+' / '+total+'</span>';caption.firstChild.textContent=project.name;
  const surface=document.createElement('div');surface.className='work-card-surface';
- const imageWindow=document.createElement('div');imageWindow.className='work-image-window';imageWindow.append(img);surface.append(imageWindow,caption);el.append(surface);scene.append(el);cards.push({el,size:.5+((i*37)%50)/100,y:(.55+((i*23)%43)/100)*(i%2?-1:1)});
+ const imageWindow=document.createElement('div');imageWindow.className='work-image-window';if(project.workImage){
+  imageWindow.classList.add('work-logo');
+  imageWindow.style.setProperty('--logo-background',project.workBackground);
+ }
+ imageWindow.append(img);surface.append(imageWindow,caption);el.append(surface);scene.append(el);cards.push({el,size:.5+((i*37)%50)/100,y:(.55+((i*23)%43)/100)*(i%2?-1:1)});
 });
 let width=innerWidth,height=innerHeight,start=0,range=1,target=0,current=0,frame=0,lastTime=0,active=true;
 function measure(){
