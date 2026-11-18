@@ -184,8 +184,6 @@
   const cycle=6000+500*i,w=2000/cycle,e='ease-in-out';
   animations.add(el.animate([{transform:'rotate(0deg)',offset:0,easing:e},{transform:'rotate(10deg)',offset:w/3,easing:e},{transform:'rotate(-10deg)',offset:2*w/3,easing:e},{transform:'rotate(0deg)',offset:w},{transform:'rotate(0deg)',offset:1}],{duration:cycle,iterations:Infinity}));
  });
- const grid=document.querySelector('.grid svg');
- if(!reduce.matches){const fade=grid.animate([{opacity:0},{opacity:getComputedStyle(grid).opacity}],{duration:2000});animations.add(fade);fade.finished.finally(()=>animations.delete(fade)).catch(()=>{});}
  // Decorations enter with the same easing as the intro, preserving their placement.
  const decorationObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
   if(!entry.isIntersecting)return;

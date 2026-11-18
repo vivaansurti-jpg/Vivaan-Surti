@@ -17,7 +17,6 @@ preferences, and hidden tabs pause background work.
 | Intro block | Opacity 0→1, y 30→0, scale .95→1; 1s, expo |
 | Intro contents | Ripple in ~70ms apart, y 20→0, scale .95→1; .6s, expo |
 | Section reveals | One-time on scroll: y 20→0 (scale .95→1 for non-headings); .5–.6s, quart; 50px inset |
-| Grid | Opacity 0→.2 over 2s |
 
 ## Hover
 
@@ -32,7 +31,6 @@ Keyboard focus gets the same lift as pointer hover; touch gets no sticky hover.
 
 ## Background
 
-- Grid: 40px pattern, opacity .2
 - Dots: 50 (28 on small screens), 2–5px; 8s loop rising 100px and returning,
   fading 0→1→0 and scaling .5→1→.5, starts staggered by .1s; grey in both themes;
   lit by the cursor
@@ -51,6 +49,5 @@ Low-core, low-memory, and data-saver devices start in Lite mode. Other devices
 switch after two consecutive slow frame samples, ignoring long isolated stalls.
 Lite keeps the scroll-driven Work gallery, capsule, navigation and pointer glow,
 with flat letters/cards and a rounded inset clip. It skips letter shadows, dot
-lighting, image hover zoom, spring hover motion, avatar physics, shooting stars
-and repeating timeline wiggles. Activating it during a visit cancels decorative
+lighting, image hover zoom, spring hover motion, avatar physics, and repeating timeline wiggles. Activating it during a visit cancels decorative
 work already running. Reduced-motion preferences remain a separate static mode.

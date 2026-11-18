@@ -8,7 +8,7 @@ the closed capsule; scroll to open the gallery and browse 12 black placeholders.
 Scrolling backward reverses the sequence. Light/dark mode is saved locally.
 
 Files:
-- `foundation/style.css` and `foundation/ambient.js`: the original grid, dots,
+- `foundation/style.css` and `foundation/ambient.js`: the ambient dots
   flashlight, and theme controls.
 - `foundation/work.css` and `foundation/work.js`: navigation, responsive Work
   layout, capsule masks, repeated typography, and project movement.
@@ -26,8 +26,7 @@ Rendering optimizations: card measurements are cached on resize/font load;
 offscreen letters are culled; card visibility and counters update only when
 changed; the capsule clip updates only during entrance/exit; the flashlight is
 a bounded translated layer; particle illumination uses cached anchors; hidden
-tabs pause background motion. Work shares Home's original fine grid, dots,
-and flashlight. No separate Work background grid is rendered.
+tabs pause background motion. Work shares Home’s ambient dots and flashlight.
 
 Projects: the Work gallery shows the 9 projects listed in
 `foundation/projects.js`, and each card opens that project's page in

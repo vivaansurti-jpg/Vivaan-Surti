@@ -6,7 +6,6 @@ html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padd
 :root[data-theme=light]{--work-void:#dfe4e8;--work-shadow:#b3c1cb;--work-shell:#ebebeb}
 .work-section{position:relative;height:1160svh;isolation:isolate;scroll-margin-top:0}
 .work-stage{position:sticky;top:0;height:100svh;width:100%;overflow:hidden;background:color-mix(in srgb,var(--work-void) 85%,transparent)}
-.work-point-field{position:absolute;inset:0;opacity:.2;background-image:radial-gradient(var(--work-ink) .6px,transparent .8px);background-size:24px 24px;pointer-events:none}
 .work-scene{position:absolute;inset:0;perspective:640px;transform-style:flat;pointer-events:none}
 .work-letter{position:absolute;top:50%;left:50%;font:400 min(17.5svh,190px)/.85 Anton,Impact,'Arial Narrow',sans-serif;color:var(--work-ink);transform-origin:center;will-change:transform;white-space:nowrap;user-select:none}
 .work-letter::before{content:attr(data-letter);position:absolute;inset:0;color:var(--work-shadow);z-index:-1;transform:translate(3px,3px) scale(1.025);opacity:var(--spread,0)}
@@ -17,24 +16,21 @@ html{scroll-behavior:auto}body{overflow-x:clip}main{max-width:none;margin:0;padd
 .work-caption span:last-child{opacity:.65}
 :root[data-theme=light] .work-card{color:#ededed;outline-color:rgb(0 0 0 / 32%)}
 
-.work-mask{position:absolute;inset:0;z-index:10;pointer-events:none;width:100%;height:100%;overflow:visible}.mask-shell{fill:var(--work-shell);fill-rule:evenodd}.mask-grid{fill:url(#work-grid);fill-rule:evenodd}.mask-line{fill:none;stroke:var(--work-outline);stroke-width:1}.mask-grid-line{fill:none;stroke:var(--work-outline);stroke-width:.65}
+.work-mask{position:absolute;inset:0;z-index:10;pointer-events:none;width:100%;height:100%;overflow:visible}.mask-shell{fill:var(--work-shell);fill-rule:evenodd}.mask-line{fill:none;stroke:var(--work-outline);stroke-width:1}
 .work-meta{position:absolute;bottom:24px;left:32px;right:32px;z-index:15;display:flex;justify-content:space-between;color:var(--muted-foreground);font:9px Geist,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase}.work-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 /* Dots sit behind the content; the flashlight stays above it so it glows over text, letters and cards. */
 .background.particles{z-index:-1}.background.glow{z-index:20}.background.light-overlay{z-index:-2}
 .outro{min-height:65svh;max-width:672px;margin:auto;padding:120px 24px}.outro h2{font:40px Geist,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.outro a{display:inline-block;font-size:12px;margin-top:24px;border-bottom:1px solid;padding-bottom:8px}
 @media(max-width:767px){.intro{padding-top:130px}.intro h1{font-size:48px}.work-meta{left:20px;right:20px;font-size:8px}.work-letter{font-size:17.5svh}}
-@media(prefers-reduced-motion:reduce){.work-section{height:auto;min-height:100svh}.work-stage{position:relative;height:auto;min-height:100svh;padding:110px 24px 80px}.work-mask,.work-scene>.work-letter,.work-point-field{display:none}.work-scene{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;perspective:none}.work-card{position:relative;top:auto;left:auto;width:100%;visibility:visible!important;transform:none!important}.work-label{position:static;width:auto;height:auto;clip-path:none;font:48px Anton,sans-serif;margin:0 0 32px}.work-meta{bottom:24px}}
+@media(prefers-reduced-motion:reduce){.work-section{height:auto;min-height:100svh}.work-stage{position:relative;height:auto;min-height:100svh;padding:110px 24px 80px}.work-mask,.work-scene>.work-letter{display:none}.work-scene{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:24px;perspective:none}.work-card{position:relative;top:auto;left:auto;width:100%;visibility:visible!important;pointer-events:auto;transform:none!important}.work-label{position:static;width:auto;height:auto;clip-path:none;font:48px Anton,sans-serif;margin:0 0 32px}.work-meta{bottom:24px}}
 /* Keep moving surfaces bounded and promote only the active gallery. */
 
-.work-point-field{left:-24px;right:-24px}
 .work-letter,.work-card{will-change:auto}
 .is-active .work-letter,.is-active .work-card.is-visible{will-change:transform}
 .background.glow{inset:auto;top:0;left:0;width:480px;height:480px;background:radial-gradient(600px circle at center,rgba(71,168,255,.15),transparent 40%);transform:translate3d(-240px,-240px,0)}
 .ambient-paused .particle{animation-play-state:paused}
-/* Work uses the same underlying 40px grid as Home. Only the letters/cards
-   are clipped by the capsule; the background stays continuous. */
 .work-stage{background:transparent}
-.mask-shell,.mask-grid,.work-point-field{display:none}
+.mask-shell{display:none}
 .work-image{height:auto;object-fit:contain}
 @media(prefers-reduced-motion:reduce){.work-card{opacity:1!important}}
 /* Dots brighten near the cursor by changing their own colour (same look as

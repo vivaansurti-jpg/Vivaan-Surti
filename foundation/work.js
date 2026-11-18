@@ -71,7 +71,7 @@ function updateTarget(){
 }
 function capsule(cx,cy,w,h){const r=w/2;return `M ${cx-r} ${cy-h/2+r} A ${r} ${r} 0 0 1 ${cx+r} ${cy-h/2+r} L ${cx+r} ${cy+h/2-r} A ${r} ${r} 0 0 1 ${cx-r} ${cy+h/2-r} Z`;}
 function paint(){
- if(reduced.matches){paintNavigation(0);scene.style.clipPath='none';cards.forEach(({el})=>el.removeAttribute('aria-hidden'));counter.textContent=projects.length+' projects';return;}
+ if(reduced.matches){paintNavigation(0);scene.style.clipPath='none';cards.forEach(card=>{card.el.removeAttribute('aria-hidden');card.el.removeAttribute('tabindex');card.visible=null;});counter.textContent=projects.length+' projects';previousCounter='';return;}
  const lite=document.documentElement.classList.contains('lite');
  const enter=smooth(current/.10),exit=smooth((current-.90)/.10),spread=closingSpread===null?enter*(1-exit):closingSpread;
  paintNavigation(spread);
@@ -117,9 +117,9 @@ function paint(){
  let visibleIndex=0;
  cards.forEach((card,i)=>{
   const center=.15+i*(.70/(cards.length-1));
-  // Each project is on screen for a little over its own slot (0.57 of the
- // previous overlap), so they pass one at a time with a short pause between.
- const halfWindow=.57*.70/(cards.length-1);
+  // A slightly longer desktop pass brings neighboring projects closer together.
+  const passDuration=width>=768?.60:.57;
+  const halfWindow=passDuration*.70/(cards.length-1);
   const t=clamp((current-center+halfWindow)/(2*halfWindow));
   // A slow-motion profile: a steady middle
   // with quartic entry/exit shoulders. Scroll supplies the clock.
