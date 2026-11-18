@@ -1,13 +1,13 @@
 
 const root=document.documentElement,button=document.querySelector('#theme');
-// Evenly distributed positions with repeating 2–5px sizes.
+// Evenly distributed positions with repeating 1–3px sizes.
 // Lighter mode for low-core / low-memory / data-saver devices.
 if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4||navigator.connection?.saveData)root.classList.add('lite');
 const particles=document.querySelector('.particles');
-const particleCount=root.classList.contains('lite')?20:innerWidth<768?28:50;
+const particleCount=root.classList.contains('lite')?16:innerWidth<768?22:40;
 for(let i=0;i<particleCount;i++){
  const dot=document.createElement('span');dot.className='particle';
- const size=2+i%4;
+ const size=1+(i%4)*.65;
  dot.style.cssText=`width:${size}px;height:${size}px;left:${(i*7.5)%100}%;top:${(i*13.7)%100}%;--duration:8s;--delay:-${(1+(i*.73)%7).toFixed(2)}s`;
  particles.append(dot);
 }
